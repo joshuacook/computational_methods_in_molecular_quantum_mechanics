@@ -1,0 +1,1495 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <title></title>
+  <style type="text/css">code{white-space: pre;}</style>
+  <style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+  </style>
+  % Table of contents formatting
+  \renewcommand{\contentsname}{Table of Contents}
+  \setcounter{tocdepth}{1}
+   
+  % Headers and page numbering 
+  \usepackage{fancyhdr}
+  \pagestyle{plain}
+   
+  % Fonts and typesetting
+  % \setmainfont{TeX Gyre Pagella}
+  % \setsansfont{Verdana}
+  
+  % Set figure legends and captions to be smaller sized sans serif font
+  \usepackage[font={footnotesize,sf}]{caption}
+  
+  \usepackage{siunitx}
+  
+  % Adjust spacing between lines to 1.5
+  \usepackage{setspace}
+  \onehalfspacing
+  \raggedbottom
+  
+  % Set margins
+  \usepackage[top=1.25in,bottom=1.25in]{geometry}
+  
+  % Chapter styling
+  \usepackage[grey]{quotchap}
+  \makeatletter 
+  \renewcommand*{\chapnumfont}{%
+    \usefont{T1}{\@defaultcnfont}{b}{n}\fontsize{80}{100}\selectfont% Default: 100/130
+    \color{chaptergrey}%
+  }
+  \makeatother
+  
+  % Set colour of links to black so that they don't show up when printed
+  \hypersetup{colorlinks=true, linkcolor=black}
+  
+  % math
+  \newcommand{\R}{\mathbb{R}}
+  \makeatletter
+  \newsavebox{\@brx}
+  \newcommand{\llangle}[1][]{\savebox{\@brx}{\(\m@th{#1\langle}\)}%
+    \mathopen{\copy\@brx\kern-0.5\wd\@brx\usebox{\@brx}}}
+  \newcommand{\rrangle}[1][]{\savebox{\@brx}{\(\m@th{#1\rangle}\)}%
+    \mathclose{\copy\@brx\kern-0.5\wd\@brx\usebox{\@brx}}}
+  \makeatother
+  
+  % Tables
+  \usepackage{booktabs}
+  \usepackage{threeparttable}
+  \usepackage{array}
+  \newcolumntype{x}[1]{%
+  >{\centering\arraybackslash}m{#1}}%
+  
+  % Allow for long captions and float captions on opposite page of figures 
+  % \usepackage[rightFloats, CaptionBefore]{fltpage}
+  
+  % Don't let floats cross subsections
+  % \usepackage[section,subsection]{extraplaceins}
+</head>
+<body>
+<p></p>
+
+
+<p> </p>
+<h1 id="summary">Summary</h1>
+<p>This work deals with computational mathematics applied to problems in modern quantum chemistry, including the diagonalization of large matrices. We use the Jupyter platform and its power over <code>numpy/scipy</code> in order to make the difficult accessible.</p>
+<p></p>
+<p></p>
+<h1 id="introduction">Introduction</h1>
+<h2 id="schrödingers-equation">Schrödinger's Equation</h2>
+<p>A dynamic quantum mechanical system is governed by a linear partial differential equation <span class="citation">(Olver 2014; Strauss 1992)</span>. Developed by Erwin Schrödinger and named for him, the equation is written</p>
+<p><br /><span class="math display">$$i\hbar\frac{\partial \psi}{\partial t}=H\psi\qquad(1)$$</span><br /></p>
+<p>where <span class="math inline">$i=\sqrt{-1}$</span>, <span class="math inline">ℏ</span> is Planck's constant, <span class="math inline"><em>H</em></span> is the self-adjoint, linear operator known as the Hamiltonian, and <span class="math inline"><em>ψ</em></span> is a wave function corresponding to a quantum mechanical state of the system.</p>
+<p>An eigenequation is a relationship describing a vector or function that is invariant with respect to a given linear operator. Given a linear operator <span class="math inline"><em>Γ</em> : 𝔽<sup><em>n</em></sup> → 𝔽<sup><em>n</em></sup></span>, <span class="math inline"><em>λ</em></span> and <span class="math inline"><em>ψ</em></span> are said to be an eigenvalue and eigenvector respectively of <span class="math inline"><em>Γ</em></span>, if</p>
+<p><br /><span class="math display"><em>Γ</em><em>ψ</em> = <em>λ</em><em>ψ</em> for <em>ψ</em> ≠ 0  (2)</span><br /></p>
+<p>Schrödinger's equation can be written independent of time as</p>
+<p><br /><span class="math display"><em>H</em><em>ψ</em> = <em>E</em><em>ψ</em>  (3)</span><br /></p>
+<p>and takes the form of an eigenequation. Then, solutions are sets of eigenfunctions representing quantum states, their corresponding eigenvalues representing energy levels.</p>
+<p>In fact, these eigenfunctions are , the most complete description that can be given of a physical system. Wave functions equate to the probability that a given measurement will result from a single measurement of an observable.</p>
+<p>Most treatments of quantum mechanics delineate a set of postulates <span class="citation">(Atkins and Friedman 2011; Eloranta 2015; Singer 2006)</span> necessary in the formulation of quantum mechanics. For our purposes suffice it to assume that wave functions:</p>
+<ol style="list-style-type: decimal">
+<li>are functions</li>
+<li>are continous and differentiable</li>
+<li>are finite valued</li>
+<li>are normal</li>
+</ol>
+<h2 id="historical-background">Historical Background</h2>
+<h3 id="heisenberg">Heisenberg</h3>
+<h3 id="bohr-model">Bohr Model</h3>
+<h3 id="ultraviolet-catastrophe">Ultraviolet Catastrophe</h3>
+<h3 id="axioms">Axioms</h3>
+<h2 id="particle-in-a-box">Particle in a Box</h2>
+<p>Central to Schrödinger's formulation is the requirement of boundary conditions. A quantum mechanical problem with no boundary conditions is ill defined. Furthermore, the quantization of the system falls out of the required bound conditions.</p>
+<p>The simplest characterization of a quantum system is the so called &quot;Particle in a Box&quot; problem in one dimension. Here, the potential energy within a confined range (say from 0 to <span class="math inline"><em>a</em></span>) is set to zero and the potential energy outside of the range, infinite. The Hamiltonian then becomes</p>
+<p><br /><span class="math display">$$
+   H = T + V =  \left\{
+     \begin{array}{lr}
+       -\frac{\hbar^2}{2m}\nabla^2 &amp; : x \in (0,a)\\
+       \infty &amp; : x \notin (0,a)
+     \end{array}
+   \right.
+\qquad(4)$$</span><br /></p>
+<p>Note that this characterization provides the boundary conditions required for quantization, namely that <span class="math inline"><em>ψ</em>(0)=<em>ψ</em>(<em>a</em>)=0</span>. Intuitively, we can easily reason that if the potential energy at 0 and at <span class="math inline"><em>a</em></span> is infinite, then the probability that a particle will be at 0 or at <span class="math inline"><em>a</em></span> is nil. We can use these bounds to solve the time-independent Schrödinger equation in one-dimension.</p>
+<p><br /><span class="math display">$$-\frac{\hbar^2}{2m}\nabla^2 \psi(x) = E\psi(x)\qquad(5)$$</span><br /></p>
+<p><br /><span class="math display">$$- \psi''(x) = \frac{2Em}{\hbar^2}\psi(x)\qquad(6)$$</span><br /></p>
+<p><br /><span class="math display">$$-\psi''(x)= \lambda^2\psi(x)\ \text{ where } 
+\lambda=\frac{\sqrt{2mE}}{\hbar}\qquad(7)$$</span><br /></p>
+<p>This equation has solutions of the form <span class="math inline"><em>ψ</em>(<em>x</em>)=<em>A</em>sin(<em>λ</em><em>x</em>)</span> where <span class="math inline">$\lambda =\frac{n\pi}{a}$</span>, <span class="math inline"><em>n</em> ∈ ℕ</span>. Recalling that we require normality in our wavefunctions, we can find <span class="math inline"><em>A</em></span>.</p>
+<p><br /><span class="math display">$$\left\langle A\sin\left(\frac{n\pi}{a} x\right) 
+\bigg\rvert A\sin\left(\frac{n\pi}{a} x\right)\right\rangle = 1
+\implies A =\sqrt{\frac{2}{a}}
+\qquad(8)$$</span><br /></p>
+<p>Then, we have the eigenfunctions, <span class="math inline">$\psi(x)=\sqrt{\frac{2}{a}}\sin\left(\frac{n\pi}{a} x\right)$</span> with corresponding eigenvalue energy levels <span class="math inline">$E=\frac{n^2\pi^2\hbar^2}{2ma^2}$</span>. Note that the energy can only take values defined by the eigenproblem, <span class="math inline">$E_1=\frac{\pi^2\hbar^2}{2ma^2}$</span>, <span class="math inline">$E_2=\frac{4\pi^2\hbar^2}{2ma^2}$</span>, ... In other words, the energy is discrete and not continuous. It is quantized. Furthermore, it is of note that there is no &quot;zero&quot;. The lowest possible value for the energy, the &quot;ground&quot; state, is <span class="math inline">$E_1=\frac{\pi^2\hbar^2}{2ma^2}$</span>.</p>
+<p></p>
+<div class="figure">
+<img src="assets/graphics/1dbox-geo.png" alt="Wave Functions &amp; Energies in a 1-D Box" />
+<p class="caption">Wave Functions &amp; Energies in a 1-D Box</p>
+</div>
+<p><img src="assets/graphics/n.png" width=100px></p>
+<div class="figure">
+<img src="assets/graphics/1dbox-prob.png" alt="Probability Distributions in a 1-D Box" />
+<p class="caption">Probability Distributions in a 1-D Box</p>
+</div>
+<!-- \begin{figure}[h]
+\minipage{0.32\textwidth}
+\includegraphics[width=\textwidth]{assets/graphics/1dbox-geo.png}
+\caption{Wave Functions \& Energies in a 1-D Box}
+\endminipage\hfill
+\minipage{0.32\textwidth}
+\centering
+\includegraphics[width=1in]{assets/graphics/n.png}
+\endminipage\hfill
+\minipage{0.32\textwidth}
+\includegraphics[width=\textwidth]{assets/graphics/1dbox-prob.png}
+\caption{Probability Distributions in a 1-D Box}
+\endminipage\hfill
+\end{figure} 
+-->
+<p>The wave function should not be interpreted as some sort of function of space and time. This is a solution to the time-independent Schrödinger equation and describes a <em>steady-state</em>. Recall that the solutions should be used to generate probability distributions. Then when the energy corresponds to <span class="math inline"><em>E</em><sub><em>i</em></sub></span>, <span class="math inline"><em>p</em> := |<em>ψ</em><sub><em>i</em></sub>|<sup>2</sup></span> describes the probability that the particle will be found at a given location.</p>
+<h2 id="particle-in-a-2-d-box">Particle in a 2-D Box</h2>
+<h2 id="discrete-representations">Discrete Representations</h2>
+<p>At the core of this work is the analogy between discrete and continuous mathematics --- matrix equations and differential equations. The time-independent Schrödinger equation (eq. 3) is essentially the second-order differential equation</p>
+<p><br /><span class="math display">$$H\psi=E\psi \implies -\frac{d^2 }{dx^2}\psi=\lambda \psi\qquad(9)$$</span><br /></p>
+<p>generally solved by <span class="math inline"><em>y</em> = cos<em>ω</em><em>x</em></span> and <span class="math inline"><em>y</em> = sin<em>ω</em><em>x</em></span> with <span class="math inline"><em>λ</em> = <em>ω</em><sup>2</sup></span>.</p>
+<p>Analogously, we consider the matrix equation (and eigenproblem)</p>
+<p><br /><span class="math display">−<em>D</em><strong>u</strong> = <em>λ</em><strong>u</strong>  (10)</span><br /></p>
+<p>where <span class="math inline"><em>D</em></span> represents a difference matrix with a specific set of boundary conditions, <span class="math inline"><strong>u</strong></span> is an eigenvector, and <span class="math inline"><em>λ</em></span> is an eigenvalue.</p>
+<h3 id="representing-a-vector-in-numpy">Representing a Vector in <code>numpy</code></h3>
+<p>It helps to begin to think of this in terms of how we might represent a function in <code>numpy</code>. Here, we represent the linear function, <span class="math inline"><em>f</em>(<em>x</em>)=<em>x</em></span> as <span class="math inline"><strong>u</strong></span> as an evenly spaced vector from 0 to 1 with steps of <span class="math inline"><em>h</em> = 0.1</span>.</p>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python">In [<span class="dv">1</span>]: <span class="im">import</span> numpy
+
+In [<span class="dv">2</span>]: u <span class="op">=</span> numpy.linspace(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">11</span>)
+
+In [<span class="dv">3</span>]: u
+Out[<span class="dv">3</span>]: array([ <span class="dv">0</span>. ,  <span class="fl">0.1</span>,  <span class="fl">0.2</span>,  <span class="fl">0.3</span>,  <span class="fl">0.4</span>,  <span class="fl">0.5</span>,  <span class="fl">0.6</span>,  <span class="fl">0.7</span>,  <span class="fl">0.8</span>,  <span class="fl">0.9</span>,  <span class="dv">1</span>. ])</code></pre></div>
+<h3 id="finite-differences">Finite Differences</h3>
+<p>Consider the derivative:</p>
+<p><br /><span class="math display">$$f'(x)=\lim_{h\to 0} \frac{f(x+h)-f(x)}{h}\qquad(11)$$</span><br /></p>
+<p>It is not possible to represent a function <span class="math inline"><em>f</em> : ℝ → ℝ</span> computationally because computers are discrete in nature and require discrete representation. Nor is it possible to symbolically represent an operation like taking the derivative. Toward a discrete representation, we consider our function as a vector and then look at the finite difference method, representing the derivative as a difference operator.</p>
+<p>Toward the difference operator we take</p>
+<p><br /><span class="math display">$$f'(x)\approx \frac{f(x+h)-f(x)}{h}\qquad(12)$$</span><br /></p>
+<p>Recalling that <span class="math inline"><strong>u</strong>[0]≈<em>f</em>(0.0)</span>, <span class="math inline"><strong>u</strong>[1]≈<em>f</em>(0.1)</span>, <span class="math inline"><strong>u</strong>[2]≈<em>f</em>(0.2)</span>,</p>
+
+<p>More generally,</p>
+<p><br /><span class="math display">$$\frac{d}{dx}\mathbf{u}[x] \approx \frac{1}{h}\left(\mathbf{u}[x+h]-\mathbf{u}[x]\right)=
+\frac{1}{h}\left(
+\begin{matrix}
+1 &amp; -1 &amp;  0 &amp; \dots &amp; 0 &amp; 0 &amp; 0 \\
+0 &amp; -1 &amp; 1 &amp; \dots &amp;  0 &amp; 0 &amp; 0 \\
+\vdots &amp; \ &amp; \ &amp; \ddots &amp; \ &amp; \ &amp; \vdots \\
+0 &amp; 0 &amp; 0 &amp; \dots &amp; 1 &amp; -1 &amp; 0 \\
+0 &amp; 0 &amp; 0 &amp; \dots &amp; 0 &amp; 1 &amp; -1 \\
+\end{matrix}\right)\mathbf{u}=A \mathbf{u}
+\qquad(13)$$</span><br /></p>
+<p>Then the first derivative can be approximated by this matrix</p>
+<p><br /><span class="math display">$$\frac{d}{dx} \approx A = 
+\frac{1}{h}\left(\begin{matrix}
+1 &amp; -1 &amp;  0 &amp; \dots &amp; 0 &amp; 0 &amp; 0 \\
+0 &amp; -1 &amp; 1 &amp; \dots &amp;  0 &amp; 0 &amp; 0 \\
+\vdots &amp; \ &amp; \ &amp; \ddots &amp; \ &amp; \ &amp; \vdots \\
+0 &amp; 0 &amp; 0 &amp; \dots &amp; 1 &amp; -1 &amp; 0 \\
+0 &amp; 0 &amp; 0 &amp; \dots &amp; 0 &amp; 1 &amp; -1 \\
+\end{matrix}\right)
+\qquad(14)$$</span><br /></p>
+<p></p>
+<h3 id="toward-second-difference-operator">Toward Second Difference Operator</h3>
+<p>Consider</p>
+
+<p><br /><span class="math display">$$f''(x)\approx \frac{1}{h^2}\left(f(x+h) - 2f(x) + f(x-h)\right)\qquad(15)$$</span><br /></p>
+<p>Now consider the following discrete representation</p>
+<pre><code>          |  2 -1  0  0  0  0  0  0  0  0  0 | |0.00| = |-|
+          | -1  2 -1  0  0  0  0  0  0  0  0 | |0.01| = |2| 
+          |  0 -1  2 -1  0  0  0  0  0  0  0 | |0.04| = |2|
+          |  0  0 -1  2 -1  0  0  0  0  0  0 | |0.09| = |2|
+          |  0  0  0 -1  2 -1  0  0  0  0  0 | |0.16| = |2|
+-1/(.01)  |  0  0  0  0 -1  2 -1  0  0  0  0 | |0.25| = |2|
+          |  0  0  0  0  0 -1  2 -1  0  0  0 | |0.36| = |2|
+          |  0  0  0  0  0  0 -1  2 -1  0  0 | |0.49| = |2|
+          |  0  0  0  0  0  0  0 -1  2 -1  0 | |0.64| = |2|
+          |  0  0  0  0  0  0  0  0 -1  2 -1 | |0.81| = |2|
+          |  0  0  0  0  0  0  0  0  0 -1  2 | |1.00| = |-|</code></pre>
+<p>Note that the vector being multiplied by the matrix corresponds to the values of <span class="math inline"><em>f</em>(<em>x</em>)=<em>x</em><sup>2</sup></span> at <span class="math inline"><em>x</em> = 0.0, 0.1, 0.2, …, 0.8, 0.9, 1.0</span>. Note that the matrix is being multiplied by <span class="math inline">$\frac{1}{h^2}=\frac{1}{.01}$</span> where <span class="math inline"><em>h</em> = 0.1</span> or the step of our vector representing <span class="math inline"><em>f</em>(<em>x</em>)</span>. Note that the returned value is the constant 2 which corresponds to <span class="math inline"><em>f</em>″(<em>x</em>)=2</span>.</p>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python"></code></pre></div>
+<h2 id="computational-science">Computational Science</h2>
+<p>Strang's <em>Computational Science and Engineering</em> <span class="citation">(Strang 2007)</span> devotes the bulk of its first chapter to a discussion of this very matrix</p>
+<p><br /><span class="math display">$$D =
+\frac{1}{h^2}\left(\begin{matrix}
+ 2 &amp; -1 &amp;  0 &amp; \dots &amp;  0 &amp;  0 &amp;  0 \\
+-1 &amp;  2 &amp; -1 &amp; \dots &amp;  0 &amp;  0 &amp;  0 \\
+ 0 &amp; -1 &amp;  2 &amp; \dots &amp;  0 &amp;  0 &amp;  0 \\
+\vdots &amp; \ &amp; \ &amp; \ddots &amp; \ &amp; \ &amp; \vdots \\
+ 0 &amp;  0 &amp;  0 &amp; \dots &amp;  2 &amp; -1 &amp;  0 \\
+ 0 &amp;  0 &amp;  0 &amp; \dots &amp; -1 &amp;  2 &amp; -1 \\
+ 0 &amp;  0 &amp;  0 &amp; \dots &amp;  0 &amp; -1 &amp;  2 \\
+\end{matrix}\right)\approx\frac{d^2}{dx^2}
+$$</span><br /></p>
+<p>This matrix has several significant properties:</p>
+<ol style="list-style-type: decimal">
+<li>It is symmetric.</li>
+<li>It is sparse.</li>
+<li>It is tridiagonal.</li>
+<li>The matrix has constant diagonals.</li>
+<li>It is invertible.</li>
+<li>It is positive definite.</li>
+</ol>
+<h3 id="numpy-and-scipy-as-wrapper-to-blas-and-lapack">Numpy and Scipy as Wrapper to BLAS and Lapack</h3>
+<p>If performance is a priority than computational mathematics must be done using C and its libraries <a href="http://www.netlib.org/blas/">BLAS</a>, <a href="http://www.netlib.org/lapack/">Lapack</a>, and <a href="http://www.caam.rice.edu/software/ARPACK/">Arpack</a>. Prior to understanding the underlying mathematics, we posit that rapid prototyping and an interactive development environment should be prioritized over performance. Toward this end, we offer as an alternative to C and its computational libraries, Python and its computational libraries <a href="http://www.numpy.org/">Numpy</a> and <a href="http://www.scipy.org/">Scipy</a>. Numpy and Scipy are open-source (free in all senses). Numpy and Scipy offer a robust interactive development environment in <a href="http://ipython.org/">IPython</a>. Furthermore, we believe that Python syntax is descended from C syntax and note that Numpy and Scipy are high-level wrappers to the same Fortran functions being used in BLAS and Lapack, and therefore porting a robust and vetted algorithm from Python to C should be straight-forward where non-trivial.</p>
+<p>Later in this document we explore the <a href="https://www.gnu.org/software/gsl/">Gnu Scientific Library</a>.</p>
+<p>Worth further invesigation are going directly to netlib which is largely maintained in Fortran. Netlib maintains <a href="http://www.netlib.org/blas/">BLAS</a>, <a href="http://www.netlib.org/lapack/">LAPACK</a>, <a href="http://icl.cs.utk.edu/plasma/">PLASMA</a>, and <a href="http://icl.cs.utk.edu/magma/">MAGMA</a>.</p>
+<p></p>
+<p></p>
+<h3 id="implementing-a-second-difference-matrix-in-numpy">Implementing a Second Difference Matrix in numpy</h3>
+<p>We have written the following function based upon <em>CSE</em> <span class="citation">(Strang 2007)</span>. It creates four matrices, each corresponding to a different set of boundary conditions: <code>D</code>, for Dirichlet, <code>R</code> for Robin, <code>N</code> for Neuman, or <code>C</code> for circular.</p>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python"><span class="kw">def</span> secondDiff(<span class="bu">type</span>,n<span class="op">=</span><span class="dv">10</span>,sparse<span class="op">=</span><span class="va">False</span>):
+    <span class="co">&#39;&#39;&#39;</span>
+<span class="co">    secondDiff Create finite difference model matrix.</span>
+<span class="co">    TYPE is one of the characters &#39;D&#39;, &#39;R&#39;, &#39;N&#39;, or &#39;C&#39;.</span>
+<span class="co">    3rd argument is boolean for sparseness</span>
+<span class="co">    &#39;&#39;&#39;</span>
+    <span class="im">import</span> numpy, scipy.sparse
+    e <span class="op">=</span> numpy.ones(n)
+    e_off <span class="op">=</span> numpy.ones(n<span class="dv">-1</span>)
+    D <span class="op">=</span> scipy.sparse.csr_matrix(
+      scipy.sparse.diags([e_off,<span class="op">-</span><span class="dv">2</span><span class="op">*</span>e,e_off],[<span class="op">-</span><span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">1</span>]))
+
+    <span class="cf">if</span> (<span class="bu">str</span>(<span class="bu">type</span>) <span class="op">==</span> <span class="st">&#39;R&#39;</span> <span class="op">or</span> <span class="bu">str</span>(<span class="bu">type</span>) <span class="op">==</span> <span class="st">&#39;T&#39;</span> <span class="op">or</span>
+        <span class="bu">str</span>(<span class="bu">type</span>) <span class="op">==</span> <span class="st">&#39;N&#39;</span> <span class="op">or</span> <span class="bu">str</span>(<span class="bu">type</span>) <span class="op">==</span> <span class="st">&#39;B&#39;</span>):
+        D[<span class="dv">0</span>,<span class="dv">0</span>] <span class="op">=</span> <span class="op">-</span><span class="dv">1</span>
+    <span class="cf">if</span> (<span class="bu">str</span>(<span class="bu">type</span>) <span class="op">==</span> <span class="st">&#39;N&#39;</span> <span class="op">or</span> <span class="bu">str</span>(<span class="bu">type</span>) <span class="op">==</span> <span class="st">&#39;B&#39;</span>):
+        D[n<span class="dv">-1</span>,n<span class="dv">-1</span>] <span class="op">=</span> <span class="op">-</span><span class="dv">1</span>
+    <span class="cf">if</span> <span class="bu">str</span>(<span class="bu">type</span>) <span class="op">==</span> <span class="st">&#39;C&#39;</span>:
+        D[<span class="dv">0</span>,n<span class="dv">-1</span>] <span class="op">=</span> <span class="dv">1</span>
+        D[n<span class="dv">-1</span>,<span class="dv">0</span>] <span class="op">=</span> <span class="dv">1</span>
+
+    <span class="cf">if</span> sparse <span class="op">==</span> <span class="va">False</span>: <span class="cf">return</span> D.todense()
+    <span class="cf">else</span>: <span class="cf">return</span> D</code></pre></div>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<h3 id="discrete-representation-of-the-particle-in-a-box">Discrete Representation of the Particle in a Box</h3>
+<p>To conclude this introduction, we note that we can discretely represent the Hamiltonian operator (eq. 4) describing the &quot;particle in a box&quot; using the matrix <code>D</code> defined by this function.</p>
+<p>We use the IPython interactive terminal to execute the commands and find its <code>%paste</code> magic function very useful.</p>
+<p>We first load the function <code>secondDiff</code>.</p>
+<p>We then load the following python modules:</p>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python">In [<span class="dv">2</span>]: <span class="im">import</span> numpy, numpy.linalg, scipy.linalg, matplotlib.pyplot
+
+<span class="co">## -- End pasted test --</span></code></pre></div>
+<p>We define the matrix equation describing the particle in a box as</p>
+<p><br /><span class="math display">$$-D\mathbf{u}=\frac{2mE}{\hbar^2} \mathbf{u}\qquad(16)$$</span><br /></p>
+<p>For <span class="math inline"><em>D</em></span>, which describes Dirichlet boundary conditions, we have</p>
+<ul>
+<li><span class="math inline"><em>θ</em><sub><em>k</em></sub> = <em>k</em><em>π</em>/(<em>n</em> + 1)</span></li>
+<li>eigenvalues, <span class="math inline"><em>E</em><sub><em>k</em></sub> = 2 − 2cos<em>θ</em><sub><em>k</em></sub></span></li>
+<li>eigenfunctions, <span class="math inline"><em>u</em><sub><em>k</em></sub> = (sin<em>k</em><em>π</em><em>h</em>, sin2<em>k</em><em>π</em><em>h</em>, …, sin<em>n</em><em>π</em><em>h</em>)</span></li>
+</ul>
+<p>for <span class="math inline"><em>k</em> ∈ [1, <em>n</em>]</span>.</p>
+<p>We define each of these in our IPython session.</p>
+<p></p>
+<p></p>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python">In [<span class="dv">3</span>]: <span class="op">%</span>paste
+<span class="kw">def</span> K_theta(k,n):
+  <span class="cf">return</span> k<span class="op">*</span>numpy.pi<span class="op">/</span>(n<span class="dv">+1</span>)
+
+<span class="kw">def</span> K_eigenvalues(n):
+  <span class="cf">return</span> <span class="dv">2</span><span class="op">*</span>numpy.ones(n) <span class="op">-</span> <span class="dv">2</span><span class="op">*</span>numpy.cos(K_theta(numpy.linspace(n,<span class="dv">1</span>,n),n))
+
+<span class="kw">def</span> K_eigenfunction(k,n):
+  vec <span class="op">=</span> numpy.sin(K_theta(numpy.linspace(<span class="dv">1</span>,n,n),n)<span class="op">*</span>k)
+  <span class="cf">return</span> vec<span class="op">/</span>numpy.linalg.norm(vec)
+
+<span class="co">## -- End pasted text --</span></code></pre></div>
+<p>We next create our second difference matrices for Dirichlet boundary conditions with <span class="math inline"><em>n</em> = 2, 3, 4, 5</span>. We display <code>K4</code> for visual inspection.</p>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python">In [<span class="dv">4</span>]: <span class="op">%</span>paste
+K2 <span class="op">=</span> <span class="op">-</span>secondDiff(<span class="st">&#39;D&#39;</span>,<span class="dv">2</span>)
+K3 <span class="op">=</span> <span class="op">-</span>secondDiff(<span class="st">&#39;D&#39;</span>,<span class="dv">3</span>)
+K4 <span class="op">=</span> <span class="op">-</span>secondDiff(<span class="st">&#39;D&#39;</span>,<span class="dv">4</span>)
+K5 <span class="op">=</span> <span class="op">-</span>secondDiff(<span class="st">&#39;D&#39;</span>,<span class="dv">5</span>)
+<span class="bu">print</span> K4
+
+<span class="co">## -- End pasted text --</span>
+[[ <span class="dv">2</span>. <span class="op">-</span><span class="dv">1</span>. <span class="op">-</span><span class="dv">0</span>. <span class="op">-</span><span class="dv">0</span>.]
+ [<span class="op">-</span><span class="dv">1</span>.  <span class="dv">2</span>. <span class="op">-</span><span class="dv">1</span>. <span class="op">-</span><span class="dv">0</span>.]
+ [<span class="op">-</span><span class="dv">0</span>. <span class="op">-</span><span class="dv">1</span>.  <span class="dv">2</span>. <span class="op">-</span><span class="dv">1</span>.]
+ [<span class="op">-</span><span class="dv">0</span>. <span class="op">-</span><span class="dv">0</span>. <span class="op">-</span><span class="dv">1</span>.  <span class="dv">2</span>.]]</code></pre></div>
+<p></p>
+<p></p>
+<h3 id="finding-eigenvalues">Finding Eigenvalues</h3>
+<p>We then use the built-in eigensolver in <code>numpy.linalg</code> to find the eigenvalues and compare it to the values generated by our function. Note that the first element in the array returned by <code>numpy.linalg.eig</code> is an array of the eigenvalues.</p>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python">In [<span class="dv">5</span>]: <span class="op">%</span>paste
+e2 <span class="op">=</span> numpy.linalg.eig(K2)
+e3 <span class="op">=</span> numpy.linalg.eig(K3)
+e4 <span class="op">=</span> numpy.linalg.eig(K4)
+e5 <span class="op">=</span> numpy.linalg.eig(K5)
+<span class="bu">print</span> e2[<span class="dv">0</span>]
+<span class="bu">print</span> K_eigenvalues(<span class="dv">2</span>)
+<span class="bu">print</span> e3[<span class="dv">0</span>]
+<span class="bu">print</span> K_eigenvalues(<span class="dv">3</span>)
+<span class="bu">print</span> e4[<span class="dv">0</span>]
+<span class="bu">print</span> K_eigenvalues(<span class="dv">4</span>)
+<span class="bu">print</span> e5[<span class="dv">0</span>]
+<span class="bu">print</span> K_eigenvalues(<span class="dv">5</span>)
+
+<span class="co">## -- End pasted text --</span>
+[ <span class="dv">3</span>.  <span class="dv">1</span>.]
+[ <span class="dv">3</span>.  <span class="dv">1</span>.]
+[ <span class="fl">3.41421356</span>  <span class="dv">2</span>.          <span class="fl">0.58578644</span>]
+[ <span class="fl">3.41421356</span>  <span class="dv">2</span>.          <span class="fl">0.58578644</span>]
+[ <span class="fl">3.61803399</span>  <span class="fl">2.61803399</span>  <span class="fl">0.38196601</span>  <span class="fl">1.38196601</span>]
+[ <span class="fl">3.61803399</span>  <span class="fl">2.61803399</span>  <span class="fl">1.38196601</span>  <span class="fl">0.38196601</span>]
+[ <span class="fl">3.73205081</span>  <span class="dv">3</span>.          <span class="dv">2</span>.          <span class="fl">0.26794919</span>  <span class="dv">1</span>.        ]
+[ <span class="fl">3.73205081</span>  <span class="dv">3</span>.          <span class="dv">2</span>.          <span class="dv">1</span>.          <span class="fl">0.26794919</span>]</code></pre></div>
+<p></p>
+<p></p>
+<h3 id="finding-eigenvectors">Finding Eigenvectors</h3>
+<p>The second element in the array by <code>numpy.linalg.eig</code> is a matrix of the eigenfunctions. Please understand that we are liberal with our implicit understanding that eigenfunctions and eigenvectors are, for our purposes, synonymous.</p>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python">In [<span class="dv">6</span>]: <span class="op">%</span>paste
+<span class="bu">print</span> e2[<span class="dv">1</span>]
+<span class="bu">print</span> K_eigenfunction(<span class="dv">1</span>,<span class="dv">2</span>)
+<span class="bu">print</span> K_eigenfunction(<span class="dv">2</span>,<span class="dv">2</span>)
+
+<span class="co">## -- End pasted text --</span>
+[[ <span class="fl">0.70710678</span>  <span class="fl">0.70710678</span>]
+ [<span class="op">-</span><span class="fl">0.70710678</span>  <span class="fl">0.70710678</span>]]
+[ <span class="fl">0.70710678</span>  <span class="fl">0.70710678</span>]
+[ <span class="fl">0.70710678</span> <span class="op">-</span><span class="fl">0.70710678</span>]
+
+In [<span class="dv">7</span>]: <span class="op">%</span>paste
+<span class="bu">print</span> e4[<span class="dv">1</span>]
+<span class="bu">print</span> K_eigenfunction(<span class="dv">1</span>,<span class="dv">4</span>)
+<span class="bu">print</span> K_eigenfunction(<span class="dv">2</span>,<span class="dv">4</span>)
+<span class="bu">print</span> K_eigenfunction(<span class="dv">3</span>,<span class="dv">4</span>)
+<span class="bu">print</span> K_eigenfunction(<span class="dv">4</span>,<span class="dv">4</span>)
+
+<span class="co">## -- End pasted text --</span>
+[[<span class="op">-</span><span class="fl">0.37174803</span> <span class="op">-</span><span class="fl">0.60150096</span> <span class="op">-</span><span class="fl">0.37174803</span> <span class="op">-</span><span class="fl">0.60150096</span>]
+ [ <span class="fl">0.60150096</span>  <span class="fl">0.37174803</span> <span class="op">-</span><span class="fl">0.60150096</span> <span class="op">-</span><span class="fl">0.37174803</span>]
+ [<span class="op">-</span><span class="fl">0.60150096</span>  <span class="fl">0.37174803</span> <span class="op">-</span><span class="fl">0.60150096</span>  <span class="fl">0.37174803</span>]
+ [ <span class="fl">0.37174803</span> <span class="op">-</span><span class="fl">0.60150096</span> <span class="op">-</span><span class="fl">0.37174803</span>  <span class="fl">0.60150096</span>]]
+[ <span class="fl">0.37174803</span>  <span class="fl">0.60150096</span>  <span class="fl">0.60150096</span>  <span class="fl">0.37174803</span>]
+[ <span class="fl">0.60150096</span>  <span class="fl">0.37174803</span> <span class="op">-</span><span class="fl">0.37174803</span> <span class="op">-</span><span class="fl">0.60150096</span>]
+[ <span class="fl">0.60150096</span> <span class="op">-</span><span class="fl">0.37174803</span> <span class="op">-</span><span class="fl">0.37174803</span>  <span class="fl">0.60150096</span>]
+[ <span class="fl">0.37174803</span> <span class="op">-</span><span class="fl">0.60150096</span>  <span class="fl">0.60150096</span> <span class="op">-</span><span class="fl">0.37174803</span>]</code></pre></div>
+<h3 id="comparison-of-timing">Comparison of timing</h3>
+<p>For comparison of timing, we introduce a function that will return the exact same values as the built-in eigensolver.</p>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python">In [<span class="dv">8</span>]: <span class="op">%</span>paste
+<span class="kw">def</span> my_eig(n):
+    vals <span class="op">=</span> []
+    vals.append(K_eigenvalues(n))
+    eigenvectors <span class="op">=</span> numpy.matrix(K_eigenfunction(<span class="dv">1</span>,n))
+    <span class="cf">for</span> i <span class="op">in</span> <span class="bu">range</span>(n<span class="dv">-1</span>):
+        eigenvectors <span class="op">=</span> numpy.r_[eigenvectors,
+                                numpy.matrix(K_eigenfunction(i<span class="dv">+2</span>,n))]
+    vals.append(eigenvectors)
+    <span class="cf">return</span> vals
+
+<span class="co">## -- End pasted text --</span></code></pre></div>
+<p>We visually inspect the three by three output.</p>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python">In [<span class="dv">9</span>]: <span class="op">%</span>paste
+<span class="bu">print</span> my_eig(<span class="dv">3</span>)
+<span class="bu">print</span> numpy.linalg.eig(K3)
+
+<span class="co">## -- End pasted text --</span>
+[array([ <span class="fl">3.41421356</span>,  <span class="dv">2</span>.        ,  <span class="fl">0.58578644</span>]),
+matrix([[  <span class="fl">5.00000000e-01</span>,   <span class="fl">7.07106781e-01</span>,   <span class="fl">5.00000000e-01</span>],
+        [  <span class="fl">7.07106781e-01</span>,   <span class="fl">8.65956056e-17</span>,  <span class="op">-</span><span class="fl">7.07106781e-01</span>],
+        [  <span class="fl">5.00000000e-01</span>,  <span class="op">-</span><span class="fl">7.07106781e-01</span>,   <span class="fl">5.00000000e-01</span>]])]
+(array([ <span class="fl">3.41421356</span>,  <span class="dv">2</span>.        ,  <span class="fl">0.58578644</span>]),
+matrix([[ <span class="op">-</span><span class="fl">5.00000000e-01</span>,  <span class="op">-</span><span class="fl">7.07106781e-01</span>,   <span class="fl">5.00000000e-01</span>],
+        [  <span class="fl">7.07106781e-01</span>,   <span class="fl">4.05925293e-16</span>,   <span class="fl">7.07106781e-01</span>],
+        [ <span class="op">-</span><span class="fl">5.00000000e-01</span>,   <span class="fl">7.07106781e-01</span>,   <span class="fl">5.00000000e-01</span>]]))</code></pre></div>
+<p></p>
+<p></p>
+<p>We use the IPython magic function <code>%timeit</code> to run our timing comparisons.</p>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python">In [<span class="dv">10</span>]: <span class="op">%</span>paste
+<span class="op">%</span>timeit numpy.linalg.eig(K5)
+<span class="op">%</span>timeit my_eig(<span class="dv">5</span>)
+
+<span class="co">## -- End pasted text --</span>
+The slowest run took <span class="fl">6.73</span> times longer than the fastest.
+This could mean that an intermediate result <span class="op">is</span> being cached
+<span class="dv">10000</span> loops, best of <span class="dv">3</span>: <span class="fl">31.8</span> µs per loop
+<span class="dv">1000</span> loops, best of <span class="dv">3</span>: <span class="dv">188</span> µs per loop</code></pre></div>
+<p>We note that the built-in eigensolver is nearly six times faster than our algorithm.</p>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python">In [<span class="dv">11</span>]: <span class="op">%</span>paste
+K10 <span class="op">=</span> secondDiff(<span class="st">&#39;D&#39;</span>,<span class="dv">10</span>)
+<span class="op">%</span>timeit numpy.linalg.eig(K10)
+<span class="op">%</span>timeit my_eig(<span class="dv">10</span>)
+
+<span class="co">## -- End pasted text --</span>
+<span class="dv">10000</span> loops, best of <span class="dv">3</span>: <span class="fl">49.8</span> µs per loop
+<span class="dv">1000</span> loops, best of <span class="dv">3</span>: <span class="dv">427</span> µs per loop</code></pre></div>
+<p>We note that the built-in eigensolver is nearly ten times faster than our algorithm.</p>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python">In [<span class="dv">12</span>]: <span class="op">%</span>paste
+K100 <span class="op">=</span> secondDiff(<span class="st">&#39;D&#39;</span>,<span class="dv">100</span>)
+<span class="op">%</span>timeit numpy.linalg.eig(K100)
+<span class="op">%</span>timeit my_eig(<span class="dv">100</span>)
+
+<span class="co">## -- End pasted text --</span>
+<span class="dv">100</span> loops, best of <span class="dv">3</span>: <span class="fl">9.06</span> ms per loop
+<span class="dv">100</span> loops, best of <span class="dv">3</span>: <span class="fl">4.97</span> ms per loop</code></pre></div>
+<p>This last result is astounding. Suddenly our algorithm is almost twice as fast as the built-in solver.</p>
+<p></p>
+<p></p>
+<h3 id="exploring-this-result">Exploring This Result</h3>
+<p>We wish to collect data over times to find eigenvalues and eigenvectors for increasing values of <span class="math inline"><em>n</em></span>. Note that our method does not actually use the matrix, but rather uses analytical results based on our knowledge of the second difference matrix for Dirichlet boundary conditions. We will need, however, to pass a matrix to the built-in eigensolver. We wish to create this matrix outside of the timer so as not to penalize the eigensolver.</p>
+<p>We wrote the following simple IPython script:</p>
+<pre class="time_test.ipy"><code>for i in range(3,300):
+    matrix = secondDiff(&#39;D&#39;,n)
+    result_my  = %timeit -o my_eig(n)
+    result_sys = %timeit -o numpy.linalg.eig(matrix)
+    %store result_my.best, result_sys.best &gt;&gt; output.txt
+
+
+import numpy, numpy.linalg, matplotlib.pyplot
+data = numpy.genfromtxt(&#39;output_1442991327.csv&#39;, delimiter=&#39;,&#39;)
+indep = data[:,0]
+my_eig_data = data[:,1]
+sys_eig_data = data[:,2]
+my_eigensolver = matplotlib.pyplot.plot(indep,my_eig_data)
+system_eigensolver = matplotlib.pyplot.plot(indep,sys_eig_data)
+matplotlib.pyplot.legend([&quot;My Eigensolver&quot;, &quot;Numpy&#39;s Eigensolver&quot;])
+matplotlib.pyplot.show()</code></pre>
+
+<p></p>
+<p></p>
+<h3 id="plotting-the-first-few-eigenfunctions">Plotting the first few eigenfunctions</h3>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python"><span class="kw">def</span> for_plot_K_eigenfunction(k,n):
+  vec <span class="op">=</span> K_eigenfunction(k,n)
+  soln <span class="op">=</span> np.insert(vec,<span class="dv">0</span>,<span class="dv">0</span>)
+  soln <span class="op">=</span> np.insert(np.zeros(<span class="dv">1</span>),<span class="dv">0</span>,soln)
+  <span class="cf">return</span> soln   
+
+<span class="kw">def</span> plot_m_K_eigenfunctions(m,n):
+  <span class="cf">for</span> i <span class="op">in</span> <span class="bu">range</span>(m<span class="dv">+1</span>):
+  plt.plot(np.linspace(<span class="dv">0</span>,<span class="dv">1</span>,n<span class="dv">+2</span>),for_plot_K_eigenfunction(i,n))  
+
+plot_m_K_eigenfunctions(<span class="dv">4</span>,<span class="dv">10</span>)
+plot_m_K_eigenfunctions(<span class="dv">4</span>,<span class="dv">20</span>)
+plot_m_K_eigenfunctions(<span class="dv">4</span>,<span class="dv">1000</span>)</code></pre></div>
+<div class="figure">
+<img src="assets/graphics/1_5_eigenvectors_23_1.png" alt="First four eigenfunctions, n=10" />
+<p class="caption">First four eigenfunctions, n=10</p>
+</div>
+<div class="figure">
+<img src="assets/graphics/1_5_eigenvectors_24_1.png" alt="First four eigenfunctions, n=20" />
+<p class="caption">First four eigenfunctions, n=20</p>
+</div>
+<div class="figure">
+<img src="assets/graphics/1_5_eigenvectors_25_1.png" alt="First four eigenfunctions, n=10000" />
+<p class="caption">First four eigenfunctions, n=10000</p>
+</div>
+<!--
+\begin{figure}[h]
+\minipage{0.32\textwidth}
+\includegraphics[width=\textwidth]{assets/graphics/1_5_eigenvectors_23_1.png}
+\caption{First four eigenfunctions, n=10}
+\endminipage\hfill
+\minipage{0.32\textwidth}
+\centering
+\includegraphics[width=\textwidth]{assets/graphics/1_5_eigenvectors_24_1.png}
+\caption{First four eigenfunctions, n=20}
+\endminipage\hfill
+\minipage{0.32\textwidth}
+\includegraphics[width=\textwidth]{assets/graphics/1_5_eigenvectors_25_1.png}
+\caption{First four eigenfunctions, n=10000}
+\endminipage\hfill
+\end{figure}
+-->
+<h1 id="power-method">Power Method</h1>
+<h2 id="solving-molecular-quantum-mechanics-problems-computationally">Solving Molecular Quantum Mechanics Problems Computationally</h2>
+<p>At its essence the work in Dr. Eloranta's lab is an extension of the simple power method for finding an eigenvector. Also known as the Von Mises Iteration, the simple power method operates on a few well conditionings, all of which are satisfied by our Hamiltonian matrices --- namely we require self-adjoint matrices, and all that this implies.</p>
+<p>The power method will only return the dominant eigenvector of an operator. Essentially, the next vector in the iteration is calculated by multiplying the current vector by the matrix being examined and then normalizing.</p>
+<p></p>
+<p></p>
+<h2 id="simple-power-method">Simple Power Method</h2>
+<ol style="list-style-type: decimal">
+<li>Choose a starting vector <span class="math inline"><strong>x</strong><sup>(0)</sup> ∈ ℝ<sup><em>n</em></sup></span> with <span class="math inline">||<strong>x</strong><sup>(0)</sup>|| = 1</span>.</li>
+<li><span class="math inline"><em>k</em> = 0</span></li>
+<li><p><code>while</code> some convergence criteria is not satisfied</p>
+<ol style="list-style-type: lower-roman">
+<li><span class="math inline"><em>k</em> := <em>k</em> + 1</span></li>
+<li><span class="math inline"><strong>y</strong><sup>(<em>k</em>)</sup> := <em>A</em><strong>x</strong><sup>(<em>k</em> − 1)</sup></span></li>
+<li><span class="math inline"><em>μ</em><sub><em>k</em></sub> := ||<strong>y</strong><sup>(<em>k</em>)</sup>||</span></li>
+<li><span class="math inline"><strong>x</strong><sup>(<em>k</em>)</sup> := <strong>y</strong><sup>(<em>k</em>)</sup>/<em>μ</em><sub><em>k</em></sub></span></li>
+</ol></li>
+</ol>
+<p>The eigenvalue can be found by calculating</p>
+
+<p></p>
+<p></p>
+<p>Here we define an iteration and that iterate 100 times to find our the eigenvector associated with the largest eigenvalue.</p>
+<pre><code>def power_iteration(A,u,n):
+  for i in range(n):
+    u      = A.dot(u)
+    mu     = numpy.sqrt(u.dot(u))
+    u      = u/mu
+  eigvec = u
+  eigval = eigval = u.dot(A.dot(u))
+  return eigval, eigvec
+
+In [1]: import numpy, scipy.linalg, numpy.random
+
+In [2]: B = numpy.random.rand(4,4)
+
+In [3]: C = B.dot(B.T) # returns a symmetric matrix
+
+In [4]: y = numpy.random.rand(4)
+
+In [5]: power_iteration(C,u,100)
+Out[5]: (5.4509787314661642,
+ array([ 0.57243721,  0.54380344,  0.38428034,  0.47845802]))
+
+In [6]: scipy.linalg.eigh(C,eigvals=(3,3))
+Out[6]:
+(array([ 5.45097873]), 
+ array([[-0.57243721],
+        [-0.54380344],
+        [-0.38428034],
+        [-0.47845802]]))</code></pre>
+<h3 id="comparison-of-timing-1">Comparison of Timing</h3>
+<pre><code>In [7]: %timeit power_iteration(C,u,100)
+1000 loops, best of 3: 351 µs per loop
+
+In [8]: %timeit scipy.linalg.eigh(C,eigvals=(3,3))
+The slowest run took 6.32 times longer than the fastest. 
+This could mean that an intermediate result is being cached
+10000 loops, best of 3: 26 µs per loop</code></pre>
+<p>It is shown that our power iteration is considerably slower than the built-in eigensolver. We are, however, hard coding the number of iterations required.</p>
+<h3 id="stopping-criteria">Stopping Criteria</h3>
+<p>It would behoove us to explore a better stopping criteria than simply iterate 100 times. Toward this we propose the use of the norm of the residual vector</p>
+<p><br /><span class="math display"><strong>r</strong> = <em>A</em><strong>u</strong><sup>*</sup> − <em>λ</em><sup>*</sup><strong>u</strong><sup>*</sup></span><br /></p>
+<p>We can then stop our calculation when <span class="math inline">$\rvert\rvert\mathbf r \rvert\rvert&lt;\epsilon$</span> for any desired <span class="math inline"><em>ϵ</em></span>.</p>
+<pre><code>def power_iteration(A,u,n,eps=0.00001):
+  r_mag = 1
+  while(r_mag &gt; eps):
+    u      = A.dot(u)
+    mu     = numpy.sqrt(u.dot(u))
+    u      = u/mu
+    eigval = eigval = u.dot(A.dot(u))
+    r      = A.dot(u)-eigval*u
+    r_mag  = numpy.sqrt(r.dot(r))
+  eigvec = u
+  return eigval, eigvec
+
+In [9]: %timeit power_iteration(C,u,100)
+The slowest run took 6.79 times longer than the fastest. 
+This could mean that an intermediate result is being cached
+10000 loops, best of 3: 42.9 µs per loop</code></pre>
+<p>While we are not beating the built-in solver, we are certainly within an order of magnitude and are satisfied with these results.</p>
+<h2 id="iterative-techniques">Iterative Techniques</h2>
+<dl>
+<dt>vector norm</dt>
+<dd>a function from <span class="math inline">$\R^n$</span> to <span class="math inline">$\R$</span>
+</dd>
+<dd><p><span class="math inline"><em>l</em><sub>2</sub></span> norm is also called the Euclidean norm</p>
+</dd>
+<dd><p><span class="math inline">$\rvert\rvert \mathbf{x} \rvert\rvert_2 = \left(\sum_{i=1}^nx_i^2\right)^{1/2}$</span></p>
+</dd>
+<dt>convergence</dt>
+<dd><p>A sequence <span class="math inline">{<strong>x</strong><sup>(<em>k</em>)</sup>}<sub><em>k</em> = 1</sub><sup>∞</sup></span> of vectors in <span class="math inline">$\R^n$</span> is said to converge to <span class="math inline"><strong>x</strong></span> with respect to the norm <span class="math inline">||⋅|| &lt; <em>ϵ</em></span>, if given any <span class="math inline"><em>ϵ</em> &gt; 0</span>, there exists an integer <span class="math inline"><em>N</em>(<em>ϵ</em>)</span> such that</p>
+<p><br /><span class="math display">||<strong>x</strong><sup>(<em>k</em>)</sup> − <strong>x</strong>|| &lt; <em>ϵ</em>, for all <em>k</em> ≥ <em>N</em>(<em>ϵ</em>)</span><br /></p>
+</dd>
+<dt>spectral radius</dt>
+<dd><p>the spectral radius of a matrix <span class="math inline"><em>A</em></span> is defined by</p>
+<p><br /><span class="math display"><em>ρ</em>(<em>A</em>)=max|<em>λ</em>||</span><br /></p>
+<p>where <span class="math inline"><em>λ</em></span> is an eigenvalue of <span class="math inline"><em>A</em></span>.</p>
+</dd>
+<dt>convergent matrices</dt>
+<dd><p>an <span class="math inline"><em>n</em></span> by <span class="math inline"><em>n</em></span> matrix is convergent if for all <span class="math inline">1 ≤ <em>i</em>, <em>j</em> ≤ <em>n</em></span></p>
+<p><br /><span class="math display">lim<sub><em>k</em> → ∞</sub>(<em>A</em><sup><em>k</em></sup>)<sub><em>i</em><em>j</em></sub> = 0</span><br /></p>
+</dd>
+</dl>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python"></code></pre></div>
+<h1 id="the-imaginary-time-propagation-method">the Imaginary Time Propagation Method</h1>
+<h2 id="applications-of-imaginary-time-propagation-method-in-material-research">Applications of Imaginary Time Propagation Method in Material Research</h2>
+<p>We are seeking approximate solutions to the time-independent Schrödinger equation</p>
+
+<p>If we can find the eigenfunctions that satisfy these equations, the corresponding eigenvalues can be found by calculating the expectation value</p>
+<p><br /><span class="math display">⟨<em>ψ</em><sub><em>i</em></sub>|<em>H</em>|<em>ψ</em><sub><em>i</em></sub>⟩</span><br /></p>
+<p>Our approach is the solve the time-dependent Schrödinger equation</p>
+<p><br /><span class="math display">$$i\hbar\frac{\partial}{\partial t}\Psi = \hat H \Psi$$</span><br /></p>
+<p>by converting it via a Wick rotation (let <span class="math inline"><em>t</em> = −<em>i</em><em>τ</em></span>) to a simple heat equation:</p>
+
+<p>Our solutions are then given by</p>
+
+<p>Then <span class="math inline">$\left(e^{-\hat H\Delta\tau/\hbar}\right)^n$</span> has the same eigenfunctions as <span class="math inline"><em>H</em><em>Ψ</em><sub><em>i</em></sub> = <em>E</em><sub><em>i</em></sub><em>Ψ</em><sub><em>i</em></sub></span>. If we iterate the decay equation it will converge on the ground state.</p>
+<p>We can solve eqn. 3 by treating it as an analog of the power method or its generalization the subspace iteration.</p>
+<p>As presented at NSF PREM Colloquium.</p>
+<p>Helium droplets not only provide a unique matrix environment for high resolution spec- troscopy and studying molecular solvation but also allow to use guest molecules as probes of the surrounding quantum medium.1–3 After the initial discovery of the helium droplet tech- nique for spectroscopic applications, attention quickly turned into characterizing the physical properties of the helium droplets themselves. The groundbreaking experiments by the Toen-nies group employed the glyoxal molecule as a probe to study the helium droplet response through optical absorption spectrum.</p>
+<h2 id="the-imaginary-time-propagation">the Imaginary Time Propagation</h2>
+<p>The imaginary time propagation method (ITP) relies on solving the time-dependent Schrödinger equation in imaginary time. We perform a Wick Rotation (setting <span class="math inline"><em>t</em> = −<em>i</em><em>τ</em></span>) to transform the time-dependent Schrödinger into a simple diffusion equation</p>
+
+
+<p>This can be thought of as the analog to a power solution or subspace iteration. As <span class="math inline"><em>τ</em> → ∞</span>, <span class="math inline"><em>ψ</em>(<em>r</em>, <em>τ</em>)</span> will converge on the eigenfunction for the ground state.</p>
+<p>In practice, a random vector is chosen as the initial state. A time-propagation will yield the ground state eigenvector. If a vector other than the ground state is desired, <span class="math inline"><em>N</em></span> separate wave functions are propagated. Each higher state eigenvector is required to be orthogonal to the lower eigenvectors and are thus discovered through the iterative process. Approximate orthogonality is enforced in the following way.</p>
+
+
+<p>In order to implement the solution computationally, the exponential operator is approximated using the Cayley unitary form, transforming the eigenvalue problem into a linear problem:</p>
+
+
+<p>A formula for the absolute error, <span class="math inline"><em>Δ</em><em>E</em><sub><em>i</em></sub></span> present in <span class="math inline"><em>E</em><sub><em>i</em></sub>(<em>τ</em>)</span> can be written in terms of the quantum mechanical standard deviation of <span class="math inline"><em>H</em></span> and is used as a stopping criteria.</p>
+
+
+<p>The ITP method reduces the solving of an eigenproblem to an iterative power solution via the solution of a linear equation. % ITP is being implemented in practice parallelized, using C and openBLAS. In current practice has been shown to have better scalability than the implicitly restarted Lanczos method as implemented in ARPACK.</p>
+<p>For the purposes of training, the algorithm is being reimplemented in Python and Numpy/Scipy. The solution of the linear equation being the most computationally expensive, theoretically involving a matrix inversion at each iteration, seven linear solution schemes were speed-tested versus Numpy's built-in eigensolver: the Numpy solver, the Scipy solver, Scipy's conjugate gradient squared (CGS) solver, a Cholevsky decomposition method, two of Scipy's sparse solvers, and a pre-inversion of the matrix iterated.</p>
+<div class="figure">
+<img src="assets/graphics/itpvlanc.png" alt="Computational scaling of the ITP and implicitly restarted Lanczos methods (ARPACK) for 1, 4 and 10 states." />
+<p class="caption">Computational scaling of the ITP and implicitly restarted Lanczos methods (ARPACK) for 1, 4 and 10 states.</p>
+</div>
+<div class="figure">
+<img src="assets/graphics/analysis_9_1.png" alt="Implementation of seven linear solving schemes in Python." />
+<p class="caption">Implementation of seven linear solving schemes in Python.</p>
+</div>
+<div class="figure">
+<img src="assets/graphics/analysis_10_1.png" alt="Conjugate Gradient Squared Solver ITP v Built-in Eigensolver" />
+<p class="caption">Conjugate Gradient Squared Solver ITP v Built-in Eigensolver</p>
+</div>
+<p>The CGS solver was found to be the fastest. In comparison to the built-in eigensolver, however, it falls well short of reasonable performance standards. Furthermore, the CGS method has been found to be the least stable of the methods (note the spike at <span class="math inline"><em>N</em> ≈ 280</span>).</p>
+<p></p>
+
+<p>Helium clusters were modeled by the Orsay-Trento DFT (OT-DFT) and the interaction with the guest molecule was included through an external potential. To compute the effective moment of inertia of the molecule--helium complex, we include an additional energy term of the form <span class="math inline">−<em>ω</em><em>L</em><sub><em>z</em></sub></span> and compute the ``rotating'' groundstate energy by minimizing</p>
+
+<p>The non-linear Schrödinger-type equation arising from the minimization of eq. 4 is solved by means of imaginary time propagation.</p>
+
+<p>In the experiment, bosonic density functional theory (DFT) is the method used to obtain calculated rotational constant values. Density functional theory is a technique that plays an important role in determining the key components that can explain why the moment of inertia decreases when rotational superfluidity takes place. The results obtained using DFT are compared with experimental data and Quantum Monte Carlo (QMC) values and there is a similar agreement which is shown by the appearance firs-turn over point.</p>
+<p>The first minimum appearing in molecular rotational constants as a function of helium droplet size has been previously associated with the onset of superfluidity in these finite systems. We investigate this relationship by bosonic density functional theory calculations of classical molecular rotors (OCS, N2O, CO and HCN) interacting with the surrounding helium. The calculated rotational constants are in fair agreement with the existing experimental data, demonstrating the applicability of the theoretical model. By inspecting the spatial evolution of the global phase and density, the increase in the rotational constant after the first minimum is shown to correlate with continuous coverage of the molecule by helium and appearance of angular phase coherence rather than completion of the first solvent shell. We assign the observed phenomenon to quantum phase transition between a localized state and one-dimensional superfluid, which represents the onset of rotational superfluidity in small helium droplets.</p>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python"></code></pre></div>
+<p></p>
+<h1 id="appendix">Appendix</h1>
+<h2 id="structuring-a-scientific-project">Structuring a Scientific Project</h2>
+<p>The below are important highlights from <a href="http://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1000424#pcbi-1000424-g001"><em>A Quick Guide to Organizing Computational Biology Projects</em></a> by William Noble.</p>
+<blockquote>
+<p>It is generally a good idea to store all of the files relevant to one project under a common root directory.</p>
+</blockquote>
+<blockquote>
+<p>use a top-level organization that is logical, with chronological organization at the next level, and logical organization below that</p>
+</blockquote>
+
+<blockquote>
+<p>In parallel with this chronological directory structure, I find it useful to maintain a chronologically organized lab notebook. This is a document that resides in the root of the results directory and that records your progress in detail. Entries in the notebook should be dated, and they should be relatively verbose, with links or embedded images or tables displaying the results of the experiments that you performed.</p>
+</blockquote>
+<h3 id="carrying-out-a-single-experiment">Carrying Out a Single Experiment</h3>
+<blockquote>
+<p>record every operation that you perform</p>
+</blockquote>
+<blockquote>
+<p>create either a README file, in which I store every command line that I used while performing the experi- ment, or a driver script (I usually call this runall) that carries out the entire exper- iment automatically</p>
+</blockquote>
+<blockquote>
+<p>I work in a combination of shell scripts, Python, and C</p>
+</blockquote>
+<blockquote>
+<p>Whatever you decide, you should end up with a file that is parallel to the lab notebook entry</p>
+</blockquote>
+<blockquote>
+<p>Here are some rules of thumb that I try to follow when developing the driver script:</p>
+</blockquote>
+<blockquote>
+<ol style="list-style-type: decimal">
+<li>Record every operation that you per- form.</li>
+</ol>
+</blockquote>
+<blockquote>
+<ol start="2" style="list-style-type: decimal">
+<li>Comment generously.</li>
+</ol>
+</blockquote>
+<blockquote>
+<ol start="3" style="list-style-type: decimal">
+<li>Avoid editing intermediate files by hand.</li>
+</ol>
+</blockquote>
+<blockquote>
+<p>Many simple editing opera- tions can be performed using standard Unix utilities such as sed, awk, grep, head, tail, sort, cut, and paste.</p>
+</blockquote>
+<blockquote>
+<ol start="4" style="list-style-type: decimal">
+<li>Store all file and directory names in this script.</li>
+</ol>
+</blockquote>
+<blockquote>
+<ol start="5" style="list-style-type: decimal">
+<li>Use relative pathnames to access other files within the same project.</li>
+</ol>
+</blockquote>
+<blockquote>
+<ol start="6" style="list-style-type: decimal">
+<li>Make the script restartable.</li>
+</ol>
+</blockquote>
+<blockquote>
+<p>For experiments that take a long time to run, I find it useful to be able to obtain a summary of the experiment’s progress thus far.</p>
+</blockquote>
+<h3 id="command-lines-versus-scripts-versus-programs">Command Lines versus Scripts versus Programs</h3>
+<blockquote>
+<ol style="list-style-type: decimal">
+<li>Driver Script</li>
+</ol>
+</blockquote>
+<blockquote>
+<ol start="2" style="list-style-type: decimal">
+<li>Single-use Script</li>
+</ol>
+</blockquote>
+<blockquote>
+<ol start="3" style="list-style-type: decimal">
+<li>Project-specific script</li>
+</ol>
+</blockquote>
+<blockquote>
+<ol start="4" style="list-style-type: decimal">
+<li>Multi-project script.</li>
+</ol>
+</blockquote>
+<blockquote>
+<p>Regardless of how general a script is supposed to be, it should have a clearly documented interface.</p>
+</blockquote>
+<h3 id="the-value-of-version-control">The Value of Version Control</h3>
+<blockquote>
+<p>provides a form of backup</p>
+</blockquote>
+<blockquote>
+<p>version control provides a historical record that can be useful for tracking down bugs or understanding old results.</p>
+</blockquote>
+<blockquote>
+<p>invaluable for collaborative projects</p>
+</blockquote>
+<blockquote>
+<p>changes should be checked in at least once a day</p>
+</blockquote>
+<blockquote>
+<p>it is possible to check in your changes on a ‘‘branch’’ of the project</p>
+</blockquote>
+<blockquote>
+<p>should only be used for files that you edit by hand</p>
+</blockquote>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python"></code></pre></div>
+<h2 id="glossary">Glossary</h2>
+<dl>
+<dt>Adjoint</dt>
+<dd>rises in many fields of mathematics. It can be defined in infinite-dimensional complex scalar product spaces (finite-dimensional case).
+</dd>
+<dt>Boundary Conditions</dt>
+<dd><br />
+
+</dd>
+<dt>Classical Mechanics</dt>
+<dd>no limitations in the accuracy with which observables may be measured.
+</dd>
+<dt>Complete Basis Set</dt>
+<dd>In a particular space a list of vectors or functions that is linearly independent and spans the space.
+</dd>
+<dt>Continuous</dt>
+<dd>A set of data is said to be continuous if the values belonging to the set can take on ANY value within a finite or infinite interval. Some examples in quantum mechanics are position and momentum.
+</dd>
+<dt>Difference Matrix</dt>
+<dd><br />
+
+</dd>
+<dt>Differentiable</dt>
+<dd><br />
+
+</dd>
+<dt>Differential Operator</dt>
+<dd><br />
+
+</dd>
+<dt>Discrete</dt>
+<dd>A set of data is said to be discrete if the values belonging to the set are distinct and separate (unconnected values). An example in quantum mechanics is spin states.
+</dd>
+<dt>Eigenequation</dt>
+<dd>a relationship describing a vector or function that is invariant with respect to a given linear operator. Given an operator <span class="math inline"><em>Γ</em> : 𝔽<sup><em>n</em></sup> → 𝔽<sup><em>n</em></sup></span>, where <span class="math inline">𝔽<sup><em>n</em></sup></span> represents either the Real or Complex field of dimenion <span class="math inline"><em>n</em></span>, <span class="math inline"><em>Γ</em></span> is said to be in the set of linear operators over the space <span class="math inline">𝔽<sup><em>n</em></sup></span>. Then, <span class="math inline"><em>λ</em></span> and <span class="math inline"><em>ψ</em></span> are said to be an eigenvalue and eigenvector respectively of the linear operator <span class="math inline"><em>Γ</em></span>, if <span class="math inline"><em>λ</em> ∈ 𝔽</span>, <span class="math inline"><em>ψ</em> ≠ 0</span> and <span class="math inline"><em>Γ</em><em>ψ</em> = <em>λ</em><em>ψ</em></span> (eq. 2)
+</dd>
+<dt>Eigenfunction</dt>
+<dd><br />
+
+</dd>
+<dt>Eigenvector</dt>
+<dd>it’s a measurable quantity known as observables in quantum mechanics.
+</dd>
+<dt>Eigenvalue</dt>
+<dd>if we are given the following equation: , then the eigenvalue of an operator is .
+</dd>
+<dt>Energy</dt>
+<dd>the sum of potential and kinetic energies where is kinetic energy and is potential energy.
+</dd>
+<dt>Hamiltonian Operator</dt>
+<dd>Classically, the Hamiltonian corresponds to the total energy of a system. The Hamiltonian operator is the corresponding quantum mechanical operator and is equal to the sum of the kinetic and potential energy operators.
+</dd>
+<dd><span class="math inline">$H=T+V=-\frac{\hbar^2}{2m}\nabla^2 + V$</span> (eq. <strong>??</strong>)
+</dd>
+<dd>The expectation value of the Hamiltonian operator is an associated energy, <span class="math inline"><em>E</em></span> that is totally conserved.
+</dd>
+<dt>Invertible</dt>
+<dd><br />
+
+</dd>
+<dt>Kinetic Energy</dt>
+<dd><br />
+
+</dd>
+<dt>Linear Combination</dt>
+<dd>Given a complete set of basis functions, it is possible to write a wavefunction describing the state of a system as a linear combination of this basis set. In other words, <span class="math inline">$\psi(\mathbf{r})=\sum_{i=1}^\infty c_i\phi_i$</span>$ (eq. <strong>??</strong>), where <span class="math inline"><em>Γ</em><em>ϕ</em><sub><em>i</em></sub> = <em>a</em><sub><em>i</em></sub><em>ϕ</em><sub><em>i</em></sub></span>.
+</dd>
+<dt>Linear Operator</dt>
+<dd><br />
+
+</dd>
+<dt>Observable</dt>
+<dd>any dynamical variable that can be measured.
+</dd>
+<dt>Planck's Constant</dt>
+<dd><br />
+
+</dd>
+<dt>Positive Definite</dt>
+<dd><br />
+
+</dd>
+<dt>Potential Energy</dt>
+<dd><br />
+
+</dd>
+<dt>Probability</dt>
+<dd><br />
+
+</dd>
+<dt>Quantum Mechanics</dt>
+<dd><br />
+
+</dd>
+<dt>Schrödinger's Equation</dt>
+<dd>Time-Dependent is
+</dd>
+<dd> <span class="math inline"><em>H</em><em>ψ</em> = <em>E</em><em>ψ</em></span> (eq. 3)
+</dd>
+<dt>Self-Adjoint Linear Operator</dt>
+<dd>The adjoint of a linear operator <span class="math inline"><em>L</em></span> is the unique linear operator <span class="math inline"><em>L</em><sup>*</sup></span> that satisfies
+</dd>
+<dd><span class="math inline">$\llangle L[u],v\rrangle = \langle u,L^*v\rangle$</span> (eq. <strong>??</strong>)
+</dd>
+<dd>An operator is called self-adjoint if <span class="math inline"><em>L</em> = <em>L</em><sup>*</sup></span>. For a self-adjoint operator, the eigenvalues are real and the eigenvectors are orthogonal.
+</dd>
+<dt>Sparse</dt>
+<dd><br />
+
+</dd>
+<dt>Spectral Theory</dt>
+<dd><br />
+
+</dd>
+<dt>State</dt>
+<dd><br />
+
+</dd>
+<dt>Steady-State</dt>
+<dd><br />
+
+</dd>
+<dt>Symmetric Matrix</dt>
+<dd><br />
+
+</dd>
+<dt>System</dt>
+<dd><br />
+
+</dd>
+<dt>Tridiagonal</dt>
+<dd><br />
+
+</dd>
+<dt>Vector</dt>
+<dd><br />
+
+</dd>
+<dt>Wave Function</dt>
+<dd><br />
+
+</dd>
+</dl>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python"></code></pre></div>
+<h2 id="c">C</h2>
+
+<p>Central to this work is the <a href="http://www.gnu.org/software/gsl/">GNU Scientific Library</a> which offers implementations of <code>openblas</code> (Open Basic Linear Algebra System) and <code>lapack</code> (Linear Algebra Package) necessary for the completion of this work. We have used <code>homebrew</code> to install <code>gsl</code> and <code>pkg-config</code></p>
+<pre><code>$ brew install pkg-config
+$ brew install gsl
+$ pkg-config --libs gsl
+-L/usr/local/Cellar/gsl/1.16/lib -lgsl -lgslcblas -lm</code></pre>
+<p>and then added the linker statements to our makefile:</p>
+<pre><code>#Tool Definitions
+CC=gcc
+CFLAGS=-I. -I$(PATHU) -DTEST
+CFLAGS+=-I/usr/local/opt/openblas/include
+CFLAGS+=-lgsl -lgslcblas -lm</code></pre>
+
+<p>We have written a short python script in order to calculate a few known eigenvalues, in this case for the 4th order Hibert Matrix.</p>
+<pre><code>import numpy
+import scipy
+from scipy.linalg import *
+
+h4 = hilbert(4)
+eigs_h4 = eig(h4)
+print eigs_h4</code></pre>
+
+<p>We begin the project with a simple tests to verify the known eigenvalues we have previously generated.</p>
+<pre><code>#include &lt;stdio.h&gt;
+#include &lt;math.h&gt;
+#include &lt;gsl/gsl_math.h&gt;
+#include &lt;gsl/gsl_eigen.h&gt;
+#include &quot;minunit.h&quot;
+
+#define DIMENSION_OF(a) (sizeof(a)/sizeof(a[0]))
+
+gsl_vector * symmetric_eigenvalues(double * data, int return_values);
+
+float round_to_5_places(float num);
+
+int tests_run = 0;
+
+double expected_eigenvalues[] = {1.500214,0.169141,0.006738,0.000097};
+
+double fourth_order_hilbert[] =
+{
+  1.0  , 1/2.0, 1/3.0, 1/4.0,
+  1/2.0, 1/3.0, 1/4.0, 1/5.0,
+  1/3.0, 1/4.0, 1/5.0, 1/6.0,
+  1/4.0, 1/5.0, 1/6.0, 1/7.0
+};
+
+static char * test_find_eigenvalues()
+{
+  gsl_vector * actual_eigenvalues = symmetric_eigenvalues(fourth_order_hilbert,0);
+
+  for (int i = 0; i &lt; DIMENSION_OF(expected_eigenvalues); i++)
+  {
+     float expected = expected_eigenvalues[i];
+     float actual = round_to_5_places(gsl_vector_get(actual_eigenvalues, i));
+
+     printf(&quot;\nexpected: %f actual: %f\n&quot;,
+       expected,actual);
+     mu_assert(&quot;error, eigenvalues do not match&quot;,
+         expected == actual);
+  }
+  return 0;
+}
+
+static char * all_tests()
+{
+  mu_run_test(test_find_eigenvalues);
+  return 0;
+}
+
+int main(int argc, char **argv)
+{
+  char * result = all_tests();
+  if (result != 0)
+  {
+    printf(&quot;%s\n&quot;, result);
+  }
+  else
+  {
+    printf(&quot;All Tests Passed\n&quot;);
+  }
+  printf(&quot;Tests run: %d\n&quot;, tests_run);
+
+  return result != 0;
+}
+
+gsl_vector * symmetric_eigenvalues(double * data, int return_values)
+{
+  gsl_matrix_view my_matrix = gsl_matrix_view_array (data, 4, 4);
+
+  gsl_vector * my_evals = gsl_vector_alloc (4);
+  gsl_matrix * my_evecs = gsl_matrix_alloc (4, 4);
+
+  gsl_eigen_symmv_workspace * my_workspace = gsl_eigen_symmv_alloc (4);
+
+  gsl_eigen_symmv (&amp;my_matrix.matrix, my_evals, my_evecs, my_workspace);
+
+  gsl_eigen_symmv_free (my_workspace);
+
+  gsl_eigen_symmv_sort (my_evals, my_evecs, GSL_EIGEN_SORT_ABS_DESC);
+
+  return my_evals;
+}
+
+float round_to_5_places(float num)
+{
+  float nearest = roundf(num * 1000000) / 1000000;
+  return nearest;
+}</code></pre>
+
+<p>I am not pleased with this particular test of the Symmetic Eigensolver implemented in GSL. It is very &quot;numerical&quot;. I think a better test would be more mathematical, such as a test of any matrix and the eigenequation itself, <span class="math inline"><em>A</em><em>x</em> = <em>λ</em><em>x</em></span>. I did, however, confirm that MinUnit is an excellent way to begin to implement a TDD mindset in C development. I think that the next step is to begin to write more tests around the openBlas implementation in the GSL.</p>
+
+<p>As per MinUnit's description, &quot;MinUnit is an extremely simple unit testing framework written in C. It uses no memory allocation, so it should work fine under almost any circumstance, including ROMable code.&quot;</p>
+<pre><code>/* file: minunit.h */
+ #define mu_assert(message, test) do { if (!(test)) return message; } while (0)
+ #define mu_run_test(test) do { char *message = test(); tests_run++; \
+                                if (message) return message; } while (0)
+ extern int tests_run;</code></pre>
+<p>As per MinUnit's description: &quot;No, that's not a typo. It's just 3 lines of code.&quot;</p>
+<p>MinUnit has also been added to <code>tools</code>.</p>
+<p>I wanted to be able to add more information to tests being run using the <a href="http://www.jera.com/techinfo/jtns/jtn002.html"><code>minunit.h</code></a> testing harness. In particular, I wanted to think of a test run as a &quot;test&quot; and an individual assert within that test run as a subtest. I wanted to be able to name each of these and have their status displayed in <code>STDOUT</code>.</p>
+
+<pre><code>/* file: my_minunit.h */
+#define mu_assert(subtest_desc, test,message) do { \
+   if (!(test)) { \
+   printf(&quot;subtest: \&quot;%s\&quot; FAILED\n&quot;, subtest_desc); \
+   return message; \
+   } \
+   else { \
+     printf(&quot;subtest: \&quot;%s\&quot; PASSED\n&quot;, subtest_desc); \
+   } \
+} while (0)
+
+#define mu_run_test(test_desc,test) do { \
+  printf(&quot;\nTest: \&quot;%s\&quot;\n&quot;,test_desc); \
+  char *message = test(); tests_run++; \
+  if (message) return message; } while (0)
+
+extern int tests_run;</code></pre>
+<p>A little less minimal but still small. I also added this file to <code>/usr/include</code> so as to not have to tell <code>gcc</code> where to find it.</p>
+
+<pre><code>
+Test: &quot;Test of GSL&quot;
+y: -0.177597     expected_y: -0.177597
+subtest: &quot;value of zero order Bessel function of the first kind&quot; PASSED
+
+Test: &quot;Test of Rectangular Complex Number Struct&quot;
+subtest: &quot;real part of a rectangular complex number&quot; PASSED
+subtest: &quot;imaginary part of a rectangular complex number&quot; PASSED
+subtest: &quot;real part of a rectangular complex number after redefinition&quot; PASSED
+subtest: &quot;imaginary part of a rectangular complex number after redefinition&quot; PASSED
+
+All Tests Passed
+Tests run: 2</code></pre>
+
+<pre><code>#include &lt;stdio.h&gt;
+#include &lt;gsl/gsl_sf_bessel.h&gt;
+#include &lt;gsl/gsl_complex_math.h&gt;
+#include &lt;math.h&gt;
+#include &lt;my_minunit.h&gt;
+
+int tests_run = 0;
+float round_to_6_places(float num);
+
+static 
+char * test_gsl_via_0_order_bessel_function_of_the_first_kind ()
+{
+  double x = 5.0;
+  double y = round_to_6_places(gsl_sf_bessel_J0 (x));
+  double expected_y = round_to_6_places(-1.775967713143382920e-01);
+  printf(&quot;y: %f \t expected_y: %f\n&quot;,y,expected_y);
+  mu_assert
+  (
+    &quot;value of zero order Bessel function of the first kind&quot;,
+    y == expected_y,
+    &quot;y: not equal to expected_y&quot; 
+  );
+  return 0;
+}
+
+static
+char * test_gsl_rectangular_complex_number_struct()
+{
+  double x = 2.43728;
+  double y = 3.23412;
+
+  gsl_complex test_rect_complex_number = gsl_complex_rect ( x, y ); 
+
+  mu_assert
+  (
+    &quot;real part of a rectangular complex number&quot;,
+    GSL_REAL(test_rect_complex_number) == x,
+    &quot;real part of rectangular complex number does not match expected&quot; 
+  );
+
+  mu_assert
+  (
+    &quot;imaginary part of a rectangular complex number&quot;,
+    GSL_IMAG(test_rect_complex_number) == y,
+    &quot;imaginary part of rectangular complex number does not match expected&quot; 
+  );
+
+  GSL_SET_REAL(&amp;test_rect_complex_number,y);
+  GSL_SET_IMAG(&amp;test_rect_complex_number,x);
+  
+  mu_assert
+  (
+    &quot;real part of a rectangular complex number after redefinition&quot;,
+    GSL_REAL(test_rect_complex_number) == y,
+    &quot;redefined real part of rectangular complex number does not match expected&quot; 
+  );
+
+  mu_assert
+  (
+    &quot;imaginary part of a rectangular complex number after redefinition&quot;,
+    GSL_IMAG(test_rect_complex_number) == x,
+    &quot;redefined imaginary part of rectangular complex number does not match expected&quot; 
+  );
+
+  return 0;
+}  
+
+static 
+char * all_tests ()
+{
+  mu_run_test(&quot;Test of GSL&quot;, test_gsl_via_0_order_bessel_function_of_the_first_kind); 
+  mu_run_test(&quot;Test of Rectangular Complex Number Struct&quot;, 
+              test_gsl_rectangular_complex_number_struct);
+  return 0;
+}
+
+int 
+main(int argc, char **argv)
+{
+  char * result = all_tests();
+  if (result != 0)
+  {
+    printf(&quot;%s\n&quot;, result);
+  }
+  else
+  {
+    printf(&quot;\nAll Tests Passed\n&quot;);
+  }
+  printf(&quot;Tests run: %d\n&quot;, tests_run);
+
+  return result != 0;
+}
+
+float 
+round_to_6_places(float num)
+{
+  float nearest = roundf(num * 10000000) / 10000000;
+  return nearest;
+}</code></pre>
+<h2 id="python">Python</h2>
+<p>While Python comes preinstalled with Mac OS X, installing through homebrew ensures that you have the most updated version as well as moves the management of Python to homebrew.</p>
+<pre><code>brew install python </code></pre>
+<p>Python comes installed by default, but best to get the latest and greatest.</p>
+<p>The above installs <code>pip</code>.</p>
+
+<p>Most of the pip installs require that they be run as <code>sudo</code>. <code>brew</code> is not a fan of <code>sudo</code> and should not have the same requirements.</p>
+<pre><code>pip install numpy
+pip install scipy
+pip install matplotlib</code></pre>
+
+<p>emulating minunit in python [[Needs Work]]</p>
+
+<pre><code>pip install ipython</code></pre>
+<p>This did not install all of the dependencies required to run IPython notebook. It was fairly straightforward to identify the missing dependencies, however, by attempting to run <code>IPython Notebook</code>.</p>
+<pre><code>ipython notebook </code></pre>
+<p>The following three dependencies were succesively required:</p>
+<pre><code>pip install pyzmqi
+pip install jinjaz
+pip install tornado</code></pre>
+
+
+
+<h2 id="unix-like">Unix-Like</h2>
+
+<p>If you need to convert files from one markup format into another, pandoc is your swiss-army knife. <a href="http://johnmacfarlane.net/pandoc/">Pandoc</a> can convert documents in markdown, reStructuredText, textile, HTML, DocBook, LaTeX, MediaWiki markup, TWiki markup, OPML, Emacs Org-Mode, Txt2Tags, Microsoft Word docx, EPUB, or Haddock markup to</p>
+<ul>
+<li>HTML formats: XHTML, HTML5, and HTML slide shows using Slidy, reveal.js, Slideous, S5, or DZSlides.</li>
+<li>Word processor formats: Microsoft Word docx, OpenOffice/LibreOffice ODT, OpenDocument XML</li>
+<li>Ebooks: EPUB version 2 or 3, FictionBook2</li>
+<li>Documentation formats: DocBook, GNU TexInfo, Groff man pages, Haddock markup</li>
+<li>Page layout formats: InDesign ICML</li>
+<li>Outline formats: OPML</li>
+<li>TeX formats: LaTeX, ConTeXt, LaTeX Beamer slides</li>
+<li>PDF via LaTeX</li>
+<li>Lightweight markup formats: Markdown, reStructuredText, AsciiDoc, MediaWiki markup, DokuWiki markup, Emacs Org-Mode, Textile</li>
+<li>Custom formats: custom writers can be written in lua.</li>
+</ul>
+<p>Pandoc was (and is) used to render &quot;final&quot; pdfs of the work done. Pandoc files were written in a hybrid of markdown (for document formatting) and Latex (for math rendering) that mirror the presentation format of IPython Notebooks.</p>
+
+<pre><code>brew install pandoc</code></pre>
+<p>You will need a reasonably robust installation.</p>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python"></code></pre></div>
+<h2 id="our-datascience-stack">Our Datascience Stack</h2>
+<p>Our goal here is to run Jupyter and Mongo as a Docker Stack via Docker Cloud.</p>
+<p>Docker is a virtualization technology we can use to maintain a reusable data science system for performing the tasks in this text. Docker's ecosystem consists of Containers, Images, Nodes, Services, and Stacks as well as two cloud services we will take advantage of, Docker Hub and Docker Cloud.</p>
+<p>A container is a stripped down Linux operating system. An image is software you provision into a container. A node is container that lives in the cloud (we will use Digital Ocean) where we can host our images. A service is a specific image running in our node, that may or may not be available to other services running on that node. A stack is a collection of services including the links between them.</p>
+<p>Jupyter provides opinionated stacks <span class="citation">(Jupyter 2016)</span> for use in a variety of contexts. We are essentially interested in the <code>datascience-notebook</code> with a slight modification. I often like using an ORM to interface with my datasets, in particular, the python <code>mongoengine</code> <span class="citation">(Lawley 2016)</span> library for interfacing with MongoDB <span class="citation">(MongoDB 2016)</span>. Jupyter does not include this library with its stack, nor is it easily available using the <code>conda</code> tool that is used to install most of the python data science stack. In order to have it included we are going to have to build our own Docker container image. The beauty of docker is that we do not have to start from scratch. We begin with the Jupyter minimal image and add only the additional components we need, in this case, <code>mongoengine</code>.</p>
+<h3 id="dockerfile">Dockerfile</h3>
+<p>In order to build our Docker image, we will use the docker command line interface. We will edit our <code>Dockerfile</code> using a standard text editor and then build and run the image via the CLI. In order to facilitate the automated build process as part of our final deployment process, we will maintain the image using git and github. We will ultimately use the image via the automated build process. A completed version of this <code>Dockerfile</code> is included at the end of this section.</p>
+<h4 id="docker-toolbox">Docker Toolbox</h4>
+<p>Make sure that you have the Docker Toolbox installed and that you are able to use the Docker command line interface (CLI) to the Docker Engine. On my mac, I need to run the Docker Quickstart Terminal application. This fires up the virtual machine that will serve as the local Docker Host, then opens my terminal application, configures numerous environment variables, finally drawing this nifty picture:</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash">                        <span class="co">##         .</span>
+                  <span class="co">## ## ##        ==</span>
+               <span class="co">## ## ## ## ##    ===</span>
+           <span class="kw">/</span><span class="st">&quot;&quot;&quot;&quot;&quot;&quot;&quot;&quot;&quot;&quot;&quot;&quot;&quot;&quot;&quot;&quot;&quot;\___/ ===</span>
+<span class="st">      ~~~ {~~ ~~~~ ~~~ ~~~~ ~~~ ~ /  ===- ~~~</span>
+<span class="st">           \______ o           __/</span>
+<span class="st">             \    \         __/</span>
+<span class="st">              \____\_______/</span></code></pre></div>
+<p>Confirm that everything is working properly by listing all currently running containers with</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash">$ <span class="kw">docker</span> ps</code></pre></div>
+<p>If you have none running, likely at this point, you should see the following:</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">CONTAINER</span> ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES</code></pre></div>
+<h4 id="configure-working-directory-for-working-with-github">Configure working directory for working with Github</h4>
+<p>As we will be using Docker's Github integration and its automated build capability to ultimately use our image, we will need to configure and use <code>git</code> to interface with Github.</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash">$ <span class="kw">mkdir</span> docker
+$ <span class="kw">mkdir</span> docker/datascience
+$ <span class="kw">cd</span> docker/datascience
+$ <span class="kw">git</span> init
+$ <span class="kw">git</span> touch Dockerfile
+$ <span class="kw">git</span> add Dockerfile
+$ <span class="kw">git</span> commit -m <span class="st">&#39;init&#39;</span></code></pre></div>
+<p>On github, create a repo called <code>datascience</code>.</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash">$ <span class="kw">git</span> remote add origin git@github.com:#USERNAME#/datascience.git
+$ <span class="kw">git</span> push -u origin master</code></pre></div>
+<p>Open <code>Dockerfile</code> in your favorite text editor. In order to not completely start from scratch, we will use the <code>jupyter/minimal-notebook</code> are the basis for our image. When we build our image, it will first pull and build this image, then build our on top of this one.</p>
+<h4 id="build-the-image-on-an-existing-image">Build the image on an existing image</h4>
+<div class="sourceCode"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span class="co"># Dockerfile</span>
+FROM jupyter/minimal-notebook</code></pre></div>
+<h4 id="identity-ourselves-as-maintainer">Identity ourselves as maintainer</h4>
+<p>We add our name as maintainer.</p>
+<div class="sourceCode"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span class="co"># Dockerfile</span>
+MAINTAINER Joshua Cook &lt;me@joshuacook.me&gt;</code></pre></div>
+<h4 id="operate-as-a-certain-user">Operate as a certain User</h4>
+<p>We will do several rounds of provisioning or installing necessary software on the machine and will need different permission levels while doing so. The <code>jupyter/minimal-notebook</code> has a user named <code>joyvan</code> that is used to run the jupyter platform. We will also need to install many libraries as <code>root</code>. We will do our first round of installs as <code>root</code>. We tell this to Docker using the command <code>USER</code>.</p>
+<div class="sourceCode"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span class="co"># Dockerfile</span>
+USER root</code></pre></div>
+<h4 id="provision-the-image">Provision the Image</h4>
+<div class="sourceCode"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span class="co"># Dockerfile</span>
+RUN apt-get update &amp;&amp; \
+    apt-get install -y --no-install-recommends \
+    python2.7 \
+    python-dev \
+    python-pip \
+    python3 \
+    python3-dev \
+    python3-pip \
+    fonts-dejavu \
+    gfortran \
+    gcc &amp;&amp; apt-get clean
+
+<span class="co"># libav-tools for matplotlib anim</span>
+RUN apt-get update &amp;&amp; \
+    apt-get install -y --no-install-recommends libav-tools &amp;&amp; \
+    apt-get clean</code></pre></div>
+<h4 id="provision-scipynumpy">Provision <code>scipy/numpy</code></h4>
+<p>Next we install our Python libraries. We largely use <code>conda</code> to do this. <code>conda</code> comes pre-installed with the <code>jupyter/minimal-notebook</code> image. We do this as <code>USER joyvan</code>.</p>
+<div class="sourceCode"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span class="co"># Dockerfile</span>
+USER jovyan
+
+<span class="co"># Install Python 3 packages</span>
+RUN conda install --yes \
+    <span class="st">&#39;ipywidgets=4.1*&#39;</span> \
+    <span class="st">&#39;pandas=0.17*&#39;</span> \
+    <span class="st">&#39;matplotlib=1.5*&#39;</span> \
+    <span class="st">&#39;scipy=0.17*&#39;</span> \
+    <span class="st">&#39;seaborn=0.7*&#39;</span> \
+    <span class="st">&#39;scikit-learn=0.17*&#39;</span> \
+    <span class="st">&#39;scikit-image=0.11*&#39;</span> \
+    <span class="st">&#39;sympy=0.7*&#39;</span> \
+    <span class="st">&#39;cython=0.23*&#39;</span> \
+    <span class="st">&#39;patsy=0.4*&#39;</span> \
+    <span class="st">&#39;statsmodels=0.6*&#39;</span> \
+    <span class="st">&#39;cloudpickle=0.1*&#39;</span> \
+    <span class="st">&#39;dill=0.2*&#39;</span> \
+    <span class="st">&#39;numba=0.23*&#39;</span> \
+    <span class="st">&#39;bokeh=0.11*&#39;</span> \
+    <span class="st">&#39;h5py=2.5*&#39;</span> \
+    <span class="dt">&amp;&amp;</span> conda clean -tipsy
+
+<span class="co"># Install Python 2 packages</span>
+RUN conda create --yes -p $CONDA_DIR/envs/python2 python=2.7 \
+    <span class="st">&#39;ipython=4.1*&#39;</span> \
+    <span class="st">&#39;ipywidgets=4.1*&#39;</span> \
+    <span class="st">&#39;pandas=0.17*&#39;</span> \
+    <span class="st">&#39;matplotlib=1.5*&#39;</span> \
+    <span class="st">&#39;scipy=0.17*&#39;</span> \
+    <span class="st">&#39;seaborn=0.7*&#39;</span> \
+    <span class="st">&#39;scikit-learn=0.17*&#39;</span> \
+    <span class="st">&#39;scikit-image=0.11*&#39;</span> \
+    <span class="st">&#39;sympy=0.7*&#39;</span> \
+    <span class="st">&#39;cython=0.23*&#39;</span> \
+    <span class="st">&#39;patsy=0.4*&#39;</span> \
+    <span class="st">&#39;statsmodels=0.6*&#39;</span> \
+    <span class="st">&#39;cloudpickle=0.1*&#39;</span> \
+    <span class="st">&#39;dill=0.2*&#39;</span> \
+    <span class="st">&#39;numba=0.23*&#39;</span> \
+    <span class="st">&#39;bokeh=0.11*&#39;</span> \
+    <span class="st">&#39;h5py=2.5*&#39;</span> \
+    <span class="st">&#39;pyzmq&#39;</span> \
+    <span class="dt">&amp;&amp;</span> conda clean -tipsy
+    </code></pre></div>
+<h4 id="provision-r">Provision <code>R</code></h4>
+<p>Use <code>conda</code> to configure <code>R</code>.</p>
+<pre><code># Dockerfile 
+# R packages including IRKernel which gets installed globally.
+RUN conda config --add channels r
+RUN conda install --yes \
+    &#39;rpy2=2.7*&#39; \
+    &#39;r-base=3.2*&#39; \
+    &#39;r-irkernel=0.5*&#39; \
+    &#39;r-plyr=1.8*&#39; \
+    &#39;r-devtools=1.9*&#39; \
+    &#39;r-dplyr=0.4*&#39; \
+    &#39;r-ggplot2=1.0*&#39; \
+    &#39;r-tidyr=0.3*&#39; \
+    &#39;r-shiny=0.12*&#39; \
+    &#39;r-rmarkdown=0.8*&#39; \
+    &#39;r-forecast=5.8*&#39; \
+    &#39;r-stringr=0.6*&#39; \
+    &#39;r-rsqlite=1.0*&#39; \
+    &#39;r-reshape2=1.4*&#39; \
+    &#39;r-nycflights13=0.1*&#39; \
+    &#39;r-caret=6.0*&#39; \
+    &#39;r-rcurl=1.95*&#39; \
+    &#39;r-randomforest=4.6*&#39; &amp;&amp; conda clean -tipsy
+    </code></pre>
+<h4 id="include-a-repo-of-jupyter-notebooks">Include a Repo of Jupyter Notebooks</h4>
+<p>The next command gives us the opportunity to include a repo of notebooks that we has been previously created. We can use jupyter to back this repo up to github and thus maintain our work across docker instances and in the case in which we need to reboot our docker image.</p>
+<div class="sourceCode"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span class="co"># Dockerfile</span>
+<span class="co"># Add local content, starting with notebooks and datasets which are the largest</span>
+<span class="co"># so that later, smaller file changes do not cause a complete recopy during</span>
+<span class="co"># build</span>
+
+COPY jupyter_notebooks/ /home/jovyan/work/</code></pre></div>
+<p>Note that you will need to add this folder to git repo as well.</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash">$ <span class="kw">git</span> add jupyter_notebooks
+$ <span class="kw">git</span> commit -m <span class="st">&#39;add folder of notebooks&#39;</span>
+$ <span class="kw">git</span> push</code></pre></div>
+<h4 id="provision-mongoengine">Provision <code>mongoengine</code></h4>
+<p>We need to install <code>mongoengine</code> as <code>root</code>.</p>
+<div class="sourceCode"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span class="co"># Dockerfile</span>
+USER root
+
+<span class="co"># Install MongoEngine python 3 wants mongoengine installed as root</span>
+RUN pip install mongoengine
+RUN pip3 install mongoengine</code></pre></div>
+<h4 id="configure-python-2-kernel">Configure Python 2 kernel</h4>
+<div class="sourceCode"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span class="co"># Dockerfile</span>
+<span class="co"># Install Python 2 kernel spec globally to avoid permission problems when NB_UID</span>
+<span class="co"># switching at runtime.</span>
+RUN $CONDA_DIR/envs/python2/bin/python \
+    $CONDA_DIR/envs/python2/bin/ipython \
+    kernelspec install-self</code></pre></div>
+<h4 id="switch-back-to-user-joyvan">Switch back to <code>USER joyvan</code></h4>
+<p>We complete our container in the role of <code>joyvan</code>.</p>
+<div class="sourceCode"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span class="co"># Dockerfile</span>
+<span class="co"># Switch back to jovyan to avoid accidental container runs as root</span>
+USER jovyan</code></pre></div>
+<h3 id="local-development">Local Development</h3>
+<p>Though we will ultimately be using this image via an automated build process, it is easiest to develop the image via a local build process. We have found the following commands to be most helpful in this process.</p>
+<h4 id="build-image-locally">Build Image Locally</h4>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash">$ <span class="kw">docker</span> build -t joshuacook/datascience .</code></pre></div>
+<p>This command will start a build process locally. Upon completion you will be able to run the image locally on your Docker Container.</p>
+<h4 id="run-image-locally">Run Image Locally</h4>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash">$ <span class="kw">docker</span> run joshuacook/datascience</code></pre></div>
+<p>This will run the image on your local container. If the build was successful, you will be able to use Jupyter by visiting http://localhost:8888 in your browser.</p>
+<h4 id="interface-with-image-via-bash">Interface With Image via <code>bash</code></h4>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash">$ <span class="kw">docker</span> run -it joshuacook/base bash</code></pre></div>
+<p>If the image is not compiling correctly, it may be helpful to interface with the image via a <code>bash</code> shell. This command will run the image and then open a shell to the image.</p>
+<p>To interface with the image as <code>USER root</code> run the following variation.</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash">$ <span class="kw">docker</span> run -it --user root joshuacook/datascience bash</code></pre></div>
+<h3 id="automated-build">Automated Build</h3>
+<p>As stated we will be using this image via Docker Hub's automated build service. Log into to Docker Hub in order to configure this service at http://hub.docker.com. Select 'Create Automated Build'. Given an option between Github and BitBucket, choose Github. After authenticating your Github account, you should be shown a list of available repositories on your Github account. Choose the previously created repo, <code>datascience</code>.</p>
+<p>Docker will automatically name the build after the associated repo. Your image will have the name <code>#DOCKERUSER#/datascience</code>. Give the image a short description such as &quot;Image for use in computational chemistry.&quot; Click 'Create'. Upon this, the automated build should be created and you will be taken to the page on Docker Hub for your image.</p>
+<p>The last step is to initiate an automated build.</p>
+<p>In the local repo, stage, commit, and push the changes to your <code>Dockerfile</code> to Github.</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash">$ <span class="kw">git</span> add Dockerfile
+$ <span class="kw">git</span> commit -m <span class="st">&#39;initial build of Docker Image&#39;</span>
+$ <span class="kw">git</span> push</code></pre></div>
+<h4 id="check-build-details">Check Build Details</h4>
+<p>Upon completing this push to Github, return to your image's page at Docker Hub. Click the link Build Details. You should see that a build has been initiated. In less than a half hour, the build should complete. Your image will now be available for cloud deployment.</p>
+<h3 id="dockercloud">DockerCloud</h3>
+<h4 id="link-to-a-cloud-provider">Link to a Cloud Provider</h4>
+<p>Having built our image, we are now ready to deploy our image via Docker Cloud. After setting up a Docker Cloud account and a Digital Ocean account, we will begin by linking the two. This can be done via Account Info under the tab Cloud Providers. Simply click the link 'Add Credentials' and complete the linking process.</p>
+<h4 id="deploy-a-node">Deploy a Node</h4>
+<p>Visit the Node tab and click 'Launch new node cluster'. Define the essential information for the node. Since we have built our stack using Docker, we can always change this information later if we need more or less cpu power or disk space. For now, a basic 2 GB[2 CPU/2 GB RAM] should be sufficient.</p>
+<h3 id="stackfile">Stackfile</h3>
+<p>To deploy our computational stack we will not be working with individual services. Rather we will use Docker's <code>Stackfile</code> format to define our stack. This is much more straightforward then the <code>Dockerfile</code> can be entered directly into the browser. Visit the Stacks tab and click 'Create Stack'. Give the stack a name such as <code>datascience</code> and enter the following:</p>
+<div class="sourceCode"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span class="co"># Stackfile</span>
+
+<span class="fu">datascience:</span>
+  <span class="fu">image:</span> <span class="st">&#39;#USERNAME#/datascience:latest&#39;</span>
+  <span class="fu">environment:</span>
+    <span class="kw">-</span> <span class="st">&#39;PASSWORD=#PASSWORD#&#39;</span>
+  <span class="fu">links:</span>
+    <span class="kw">-</span> mongo
+  <span class="fu">ports:</span>
+    <span class="kw">-</span> <span class="st">&#39;80:8888&#39;</span>
+<span class="fu">mongo:</span>
+  <span class="fu">image:</span> <span class="st">&#39;mongo:latest&#39;</span>
+  <span class="fu">expose:</span>
+    <span class="kw">-</span> <span class="st">&#39;27017&#39;</span></code></pre></div>
+<p>Note, that we have included MongoDB's image with no additional modifications, exposed the mongo image/service on the default port <code>27017</code>, and then linked <code>mongo</code> to our <code>datascience</code> stack using</p>
+<div class="sourceCode"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span class="fu">links:</span>
+  <span class="kw">-</span> mongo</code></pre></div>
+<p>Note that we have link port <code>8888</code> on our datascience image/service to port <code>80</code> on our node which means that our <code>datascience</code> image/service will be available in a browser by visiting the ip or dns associated with our node.</p>
+<p></p>
+<h2 id="references">References</h2>
+
+<div id="refs" class="references">
+<div id="ref-atkins2011molecular">
+<p>Atkins, Peter W, and Ronald S Friedman. 2011. <em>Molecular Quantum Mechanics</em>. Oxford university press.</p>
+</div>
+<div id="ref-Eloranta:quantum">
+<p>Eloranta, Jussi. 2015. “Undergraduate Quantum Chemistry.” <em>Cal State Northridge</em>.</p>
+</div>
+<div id="ref-jupyter_stacks">
+<p>Jupyter, Project. 2016. “Opinionated Stacks of Ready-to-Run Jupyter Applications in Docker.” <a href="https://github.com/jupyter/docker-stacks" class="uri">https://github.com/jupyter/docker-stacks</a>.</p>
+</div>
+<div id="ref-mongoengine">
+<p>Lawley, Ross. 2016. “Mongoengine.” <a href="https://www.mongoengine.org/" class="uri">https://www.mongoengine.org/</a>.</p>
+</div>
+<div id="ref-mongodb">
+<p>MongoDB. 2016. “MongoDB for GIANT Ideas | MongoDB.” <a href="https://www.mongodb.org/" class="uri">https://www.mongodb.org/</a>.</p>
+</div>
+<div id="ref-olver2014introduction">
+<p>Olver, Peter J. 2014. <em>Introduction to Partial Differential Equations</em>. Springer.</p>
+</div>
+<div id="ref-singer2006linearity">
+<p>Singer, Stephanie Frank. 2006. <em>Linearity, Symmetry, and Prediction in the Hydrogen Atom</em>. Springer Science &amp; Business Media.</p>
+</div>
+<div id="ref-strang2007computational">
+<p>Strang, Gilbert. 2007. <em>Computational Science and Engineering</em>. Vol. 1. Wellesley-Cambridge Press Wellesley.</p>
+</div>
+<div id="ref-strauss1992partial">
+<p>Strauss, Walter A. 1992. <em>Partial Differential Equations: An Introduction</em>. <em>New York</em>.</p>
+</div>
+</div>
+</body>
+</html>

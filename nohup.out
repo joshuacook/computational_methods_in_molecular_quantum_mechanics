@@ -1,0 +1,28 @@
+[I 11:01:36.580 NotebookApp] Serving notebooks from local directory: /Users/joshuacook/Dropbox/src/computational_methods_in_molecular_quantum_mechanics
+[I 11:01:36.581 NotebookApp] 0 active kernels 
+[I 11:01:36.581 NotebookApp] The Jupyter Notebook is running at: http://localhost:8888/
+[I 11:01:36.581 NotebookApp] Use Control-C to stop this server and shut down all kernels (twice to skip confirmation).
+[W 11:01:36.606 NotebookApp] 404 GET /api/kernels/7a30ca43-8d24-4c8e-98b1-9d4841a7b050/channels?session_id=97383C674EFA42BF8FB37A5DE66E3188 (::1): Kernel does not exist: 7a30ca43-8d24-4c8e-98b1-9d4841a7b050
+[W 11:01:36.804 NotebookApp] 404 GET /api/kernels/7a30ca43-8d24-4c8e-98b1-9d4841a7b050/channels?session_id=97383C674EFA42BF8FB37A5DE66E3188 (::1) 219.66ms referer=None
+[W 11:01:36.812 NotebookApp] 404 GET /api/kernels/463ab839-484c-44f7-8678-448c724798bb/channels?session_id=96576AE07F484D6586E54827D9A7899C (127.0.0.1): Kernel does not exist: 463ab839-484c-44f7-8678-448c724798bb
+[W 11:01:36.813 NotebookApp] 404 GET /api/kernels/463ab839-484c-44f7-8678-448c724798bb/channels?session_id=96576AE07F484D6586E54827D9A7899C (127.0.0.1) 4.11ms referer=None
+[W 11:01:36.819 NotebookApp] 404 GET /api/kernels/2b3dc74a-96de-4ef4-9206-4b97f7188ab6/channels?session_id=BD49EF6A5F7A420AB5525D990DA7E734 (::1): Kernel does not exist: 2b3dc74a-96de-4ef4-9206-4b97f7188ab6
+[W 11:01:36.820 NotebookApp] 404 GET /api/kernels/2b3dc74a-96de-4ef4-9206-4b97f7188ab6/channels?session_id=BD49EF6A5F7A420AB5525D990DA7E734 (::1) 4.76ms referer=None
+[W 11:01:36.960 NotebookApp] 404 GET /api/kernels/747e3403-524e-4f2c-a858-765d46cc3285/channels?session_id=EF0A0F4F4D424506BB9BB981D0B83781 (::1): Kernel does not exist: 747e3403-524e-4f2c-a858-765d46cc3285
+[W 11:01:36.961 NotebookApp] 404 GET /api/kernels/747e3403-524e-4f2c-a858-765d46cc3285/channels?session_id=EF0A0F4F4D424506BB9BB981D0B83781 (::1) 4.20ms referer=None
+[W 11:01:37.024 NotebookApp] 404 GET /api/kernels/b863a037-7519-4343-b805-5b9068e62c4b/channels?session_id=12E21F80E7974FCA92128D5531B09704 (::1): Kernel does not exist: b863a037-7519-4343-b805-5b9068e62c4b
+[W 11:01:37.025 NotebookApp] 404 GET /api/kernels/b863a037-7519-4343-b805-5b9068e62c4b/channels?session_id=12E21F80E7974FCA92128D5531B09704 (::1) 6.25ms referer=None
+[W 11:01:37.247 NotebookApp] 404 GET /api/kernels/fc380862-35b1-40b4-8caa-73b841c4c48b/channels?session_id=0E069FBA0FA846548FCD631F74BB5490 (::1): Kernel does not exist: fc380862-35b1-40b4-8caa-73b841c4c48b
+[W 11:01:37.249 NotebookApp] 404 GET /api/kernels/fc380862-35b1-40b4-8caa-73b841c4c48b/channels?session_id=0E069FBA0FA846548FCD631F74BB5490 (::1) 4.55ms referer=None
+[W 11:01:37.480 NotebookApp] 404 GET /api/kernels/9aeacacb-8722-42f8-b330-54080f65c89d/channels?session_id=41132BB373AF4A798530F15EE377E268 (::1): Kernel does not exist: 9aeacacb-8722-42f8-b330-54080f65c89d
+[W 11:01:37.481 NotebookApp] 404 GET /api/kernels/9aeacacb-8722-42f8-b330-54080f65c89d/channels?session_id=41132BB373AF4A798530F15EE377E268 (::1) 4.99ms referer=None
+[W 11:01:37.730 NotebookApp] 404 GET /api/kernels/f5799770-4578-43e1-8b21-e0434e456e3a/channels?session_id=4E3C4EBBF076485B84550DF48D54A759 (::1): Kernel does not exist: f5799770-4578-43e1-8b21-e0434e456e3a
+[W 11:01:37.731 NotebookApp] 404 GET /api/kernels/f5799770-4578-43e1-8b21-e0434e456e3a/channels?session_id=4E3C4EBBF076485B84550DF48D54A759 (::1) 5.05ms referer=None
+[W 11:01:37.899 NotebookApp] 404 GET /api/kernels/15622fa1-c92c-4c19-8133-5eab66a3e307/channels?session_id=713A6EE08A834969880B7B881E0E43FC (::1): Kernel does not exist: 15622fa1-c92c-4c19-8133-5eab66a3e307
+[W 11:01:37.901 NotebookApp] 404 GET /api/kernels/15622fa1-c92c-4c19-8133-5eab66a3e307/channels?session_id=713A6EE08A834969880B7B881E0E43FC (::1) 4.58ms referer=None
+[W 11:01:38.034 NotebookApp] 404 GET /api/kernels/25d98451-36c5-4b62-9e18-537d1beb2f17/channels?session_id=0FDF4448543D4CE8915F8CCA3DE0F137 (::1): Kernel does not exist: 25d98451-36c5-4b62-9e18-537d1beb2f17
+[W 11:01:38.036 NotebookApp] 404 GET /api/kernels/25d98451-36c5-4b62-9e18-537d1beb2f17/channels?session_id=0FDF4448543D4CE8915F8CCA3DE0F137 (::1) 6.96ms referer=None
+[W 11:01:38.796 NotebookApp] 404 GET /api/kernels/7e7e4f88-2765-4d32-af20-533ea542d6bf/channels?session_id=A69B52A0980E44BC87FBA77211A6EED5 (::1): Kernel does not exist: 7e7e4f88-2765-4d32-af20-533ea542d6bf
+[W 11:01:38.797 NotebookApp] 404 GET /api/kernels/7e7e4f88-2765-4d32-af20-533ea542d6bf/channels?session_id=A69B52A0980E44BC87FBA77211A6EED5 (::1) 5.40ms referer=None
+[C 11:01:38.877 NotebookApp] received signal 15, stopping
+[I 11:01:38.878 NotebookApp] Shutting down kernels
